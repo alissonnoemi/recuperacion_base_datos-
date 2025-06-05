@@ -36,3 +36,59 @@
             display: inline-block;
             margin-right: 2px;
         }
+        .video-container {
+                    position: relative;
+                    width: 100%;
+                    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+                    background-color: #f0f4f8; /* Light background for video placeholder */
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    overflow: hidden;
+                    border-radius: 0.5rem; /* Equivalent to rounded-lg */
+                }
+                .video-container .play-button {
+                    position: absolute;
+                    cursor: pointer;
+                    width: 4rem; /* Adjust size as needed */
+                    height: 4rem;
+                    background-color: white;
+                    border-radius: 9999px; /* Equivalent to rounded-full */
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* Equivalent to shadow-md */
+                }
+                .video-container .play-button svg {
+                    fill: #3b82f6; /* Equivalent to text-blue-600 */
+                }
+                .gradient-background {
+                    background: linear-gradient(to right, #e0f2fe, #f0f4f8); /* Light blue to very light blue/gray */
+                }
+                  .gradient-bg-light {
+                            background: linear-gradient(to bottom, #f0f4f8, #e0f2fe); /* Adjust as needed for the light blue gradient */
+                            /* Using very light blues/grays to match the subtle background */
+                            background-color: #f8fafc; /* Fallback */
+                        }
+                        .icon-stripe {
+                            background-color: #635bff; /* Specific Stripe purple */
+                        }
+                        .icon-square {
+                            background-color: #e0f2fe; /* Light blue, similar to the image */
+                        }
+                        .icon-zapier {
+                            background-color: #1a1a1a; /* Dark black */
+                        }
+                        .icon-paypal {
+                            background-color: #ffc439; /* PayPal yellow */
+                        }
+                        .icon-google-analytics {
+                            background-color: #ffffff; /* White background */
+                        }
+                        .brain-icon-container {
+                            background-color: #e0f2fe; /* Light blue background for the brain icon */
+                            /* For the brain icon, you'd typically use an SVG or an image */
+                        }
+                        .brain-icon-container svg path {
+                            fill: #3b82f6; /* Blue color for the brain icon */
+                        }

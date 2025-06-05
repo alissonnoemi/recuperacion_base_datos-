@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="@{/css/salonesBelleza.css}">
+    <title>Clínicas</title>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="flex-1">
+    <section class="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-24 sm:py-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6 animate__animated animate__fadeInDown">
+                AgendaPro Connect para <span class="text-blue-600">Clínicas y Terapia</span>
+            </h1>
+            <p class="text-xl text-gray-700 mb-10 max-w-2xl mx-auto animate__animated animate__fadeInUp animate__delay-0-5s">
+                Optimiza la gestión de tus consultas y pacientes, manteniendo la confidencialidad y mejorando la eficiencia de tu práctica.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s">
+                <a th:href="@{/gratis}" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-semibold rounded-full shadow-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300">
+                    Comienza Gratis para tu Clínica
+                </a>
+                <a th:href="@{/demo}" class="inline-flex items-center justify-center px-8 py-3 border-2 border-blue-600 text-base font-semibold rounded-full text-blue-700 hover:bg-blue-50 transition-colors duration-300">
+                    Ver Demo Clínica
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="py-16 bg-white sm:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Funcionalidades Esenciales para tu Práctica Médica
+                </h2>
+                <p class="mt-4 text-lg text-gray-600">
+                    Herramientas diseñadas para la eficiencia y el cuidado del paciente.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="flex flex-col bg-gray-50 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 animate__animated animate__fadeInUp">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 feature-icon-circle">
+                            <svg class="h-8 w-8 feature-icon-svg" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Gestión de Expedientes de Pacientes</h3>
+                        <p class="text-gray-600">Accede rápidamente a historiales de tratamiento, notas de consulta y datos de contacto seguros.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col bg-gray-50 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 animate__animated animate__fadeInUp animate__delay-0-1s">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 feature-icon-circle">
+                            <svg class="h-8 w-8 feature-icon-svg" fill="currentColor" viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Agendamiento de Citas Clínicas</h3>
+                        <p class="text-gray-600">Programa citas individuales o recurrentes para múltiples profesionales y salas de forma eficiente.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col bg-gray-50 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 animate__animated animate__fadeInUp animate__delay-0-2s">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 feature-icon-circle">
+                            <svg class="h-8 w-8 feature-icon-svg" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Recordatorios de Citas para Pacientes</h3>
+                        <p class="text-gray-600">Reduce las ausencias con recordatorios automáticos por SMS o email, manteniendo a los pacientes informados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 sm:py-24 bg-indigo-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+                <div class="text-center lg:text-left">
+                    <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl mb-6">
+                        Simplifica la Gestión y Céntrate en el Cuidado del Paciente
+                    </h2>
+                    <p class="text-lg text-gray-700 mb-8">
+                        AgendaPro Connect te permite automatizar tareas administrativas, gestionar tu equipo médico y mejorar la comunicación con tus pacientes, ofreciendo un servicio de salud de primera.
+                    </p>
+                    <a href="/caracteristicas" class="inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200">
+                        Descubre más funcionalidades <span aria-hidden="true" class="ml-1">→</span>
+                    </a>
+                </div>
+                <div class="mt-10 lg:mt-0 flex justify-center lg:justify-end">
+                    <img th:src="@{/imagenes/clinica.jpg}" alt="Clínica Agenda Mockup" class="rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 animate__animated animate__fadeInRight animate__delay-0-5s">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-20 bg-indigo-600 text-white text-center">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-extrabold sm:text-4xl mb-8">
+                ¿Listo para una Gestión Clínica Eficiente?
+            </h2>
+            <p class="text-lg opacity-90 mb-10">
+                Empieza hoy mismo tu prueba gratuita de 14 días y descubre el poder de una gestión inteligente.
+            </p>
+            <a th:href="@{/gratis}" class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-semibold rounded-full shadow-lg text-indigo-600 bg-white hover:bg-indigo-100 transition-colors duration-300">
+                ¡Comienza Ahora para tu Clínica!
+            </a>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

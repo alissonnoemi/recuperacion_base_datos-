@@ -1,0 +1,14 @@
+body { font-family: 'Sora', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; display: flex; flex-direction: column; min-height: 100vh; }
+        main { flex: 1; }
+        .pricing-card-highlight {
+            border: 2px solid theme('colors.indigo.600');
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            transform: scale(1.02);
+            position: relative;
+            z-index: 10;
+        }
+        .pricing-toggle-active {
+            background-color: theme('colors.indigo.600');
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }

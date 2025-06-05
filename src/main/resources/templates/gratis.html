@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="@{/css/gratis.css}">
+    <title>Registro Prueba Gratuita</title>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="min-h-screen flex items-center justify-center p-8 gradient-background animate__animated animate__fadeIn">
+    <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div class="form-container bg-white rounded-xl shadow-2xl p-8 sm:p-10 lg:p-12 text-center animate__animated animate__fadeInDown">
+            <form id="formulario-gratis" action="/api/register-trial" method="POST" class="space-y-6">
+            <div class="mb-8">
+                <a href="/" class="inline-flex items-center space-x-3 text-indigo-600">
+                    <img th:src="@{/imagenes/logo.png}" alt="Logo AgendaPro Connect" class="h-12 w-auto">
+                    <span class="text-3xl font-bold tracking-tight">AgendaPro Connect</span>
+                </a>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
+                Comienza tu Prueba Gratuita de 14 Días
+            </h1>
+            <p class="text-gray-600 text-lg mb-8">
+                Acceso completo. <span class="font-semibold text-indigo-700">Sin tarjeta de crédito requerida. Puedes cancelar en cualquier momento.</span>
+            </p>
+                <div class="input-group text-left">
+                    <label for="nombreCompleto" class="block text-sm font-medium text-gray-700 sr-only">Nombre Completo</label>
+                    <div class="relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-user icon"></i>
+                        </div>
+                        <input type="text" name="nombreCompleto" id="nombreCompleto"
+                               class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                               placeholder="Tu Nombre Completo" required>
+                    </div>
+                </div>
+                <div class="input-group text-left">
+                    <label for="email" class="block text-sm font-medium text-gray-700 sr-only">Email</label>
+                    <div class="relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-envelope icon"></i>
+                        </div>
+                        <input type="email" name="email" id="email"
+                               class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                               placeholder="Tu Email Profesional" required>
+                    </div>
+                </div>
+                <div class="input-group text-left">
+                    <label for="password" class="block text-sm font-medium text-gray-700 sr-only">Contraseña</label>
+                    <div class="relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock icon"></i>
+                        </div>
+                        <input type="password" name="password" id="password"
+                               class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                               placeholder="Crea una Contraseña Segura" required minlength="8">
+                    </div>
+                </div>
+                <div class="input-group text-left">
+                    <label for="nombreNegocio" class="block text-sm font-medium text-gray-700 sr-only">Nombre del Negocio</label>
+                    <div class="relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-building icon"></i>
+                        </div>
+                        <input type="text" name="nombreNegocio" id="nombreNegocio"
+                               class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                               placeholder="Nombre de tu Negocio/Clínica" required>
+                    </div>
+                </div>
+                <div class="input-group text-left">
+                    <label for="tipoNegocio" class="block text-sm font-medium text-gray-700 sr-only">Tipo de Negocio</label>
+                    <div class="relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-briefcase icon"></i>
+                        </div>
+                        <select id="tipoNegocio" name="tipoNegocio" required
+                                class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
+                            <option value="" disabled selected>Selecciona tu tipo de negocio</option>
+                            <option value="salon-belleza">Salón de Belleza / Peluquería</option>
+                            <option value="spa">Spa / Centro de Estética</option>
+                            <option value="clinica-salud">Clínica de Salud (Médica, Dental, Fisioterapia)</option>
+                            <option value="centro-terapia">Centro de Terapia / Bienestar</option>
+                            <option value="gimnasio">Gimnasio / Estudio Fitness</option>
+                            <option value="clases-privadas">Clases Particulares / Coaching</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fa-solid fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center text-left">
+                    <input id="aceptarTerminos" name="aceptarTerminos" type="checkbox" required
+                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <label for="aceptarTerminos" class="ml-2 block text-sm text-gray-900">
+                        Acepto los <a href="/terminos-condiciones" class="font-medium text-indigo-600 hover:text-indigo-500" target="_blank">Términos y Condiciones</a> y la <a href="/politica-privacidad" class="font-medium text-indigo-600 hover:text-indigo-500" target="_blank">Política de Privacidad</a>.
+                    </label>
+                </div>
+                <div>
+                    <a href="@{/agradecimiento]" class="block text-sm text-indigo-600 hover:text-indigo-500 mb-4">
+                        Al registrarte, aceptas recibir correos electrónicos de AgendaPro Connect. Puedes darte de baja en cualquier momento.
+                    <button type="submit"
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300 transform hover:scale-105">
+                        Iniciar Prueba Gratuita
+                    </button>
+                    </a>
+                </div>
+            </form>
+            <p class="mt-8 text-sm text-gray-500">
+                ¿Ya tienes una cuenta?
+                <a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia Sesión aquí</a>.
+            </p>
+            <p class="mt-4 text-xs text-gray-400">
+                Al registrarte, aceptas recibir comunicaciones de AgendaPro Connect. Puedes optar por no recibirlas en cualquier momento.
+            </p>
+        </div>
+        <!-- Planes de costos -->
+        <div class="flex flex-col justify-center space-y-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 animate__animated animate__fadeInRight">Planes de Precios</h2>
+            <div class="space-y-6">
+                <!-- Plan Básico -->
+                <div class="bg-white rounded-xl shadow-xl p-6 border border-gray-100 animate__animated animate__fadeInUp">
+                    <h3 class="text-xl font-semibold text-indigo-700 mb-2">Básico</h3>
+                    <p class="text-3xl font-bold text-gray-900 mb-2">$39,99<span class="text-base font-normal">/mes</span></p>
+                    <ul class="text-gray-600 mb-4 space-y-1 text-left">
+                        <li>✔ 1 usuario</li>
+                        <li>✔ Reservas ilimitadas</li>
+                        <li>✔ Soporte básico</li>
+                    </ul>
+                    <a href="#formulario-gratis" class="block w-full text-center py-2 rounded-md bg-indigo-50 text-indigo-700 font-semibold hover:bg-indigo-100 transition">Elegir Básico</a>
+                </div>
+                <!-- Plan Pro (recomendado) -->
+                <div class="bg-indigo-600 rounded-xl shadow-2xl p-6 border-2 border-indigo-700 animate__animated animate__fadeInUp">
+                    <h3 class="text-xl font-semibold text-white mb-2">Pro <span class="ml-2 px-2 py-1 bg-white text-indigo-700 rounded text-xs font-bold">Recomendado</span></h3>
+                    <p class="text-3xl font-bold text-white mb-2">$79,99<span class="text-base font-normal">/mes</span></p>
+                    <ul class="text-indigo-100 mb-4 space-y-1 text-left">
+                        <li>✔ Hasta 5 usuarios</li>
+                        <li>✔ Reservas y recordatorios automáticos</li>
+                        <li>✔ Integraciones avanzadas</li>
+                        <li>✔ Soporte prioritario</li>
+                    </ul>
+                    <a href="#formulario-gratis" class="block w-full text-center py-2 rounded-md bg-white text-indigo-700 font-semibold hover:bg-indigo-50 transition">Elegir Pro</a>
+                </div>
+                <!-- Plan Empresarial -->
+                <div class="bg-white rounded-xl shadow-xl p-6 border border-gray-100 animate__animated animate__fadeInUp">
+                    <h3 class="text-xl font-semibold text-indigo-700 mb-2">Empresarial</h3>
+                    <p class="text-3xl font-bold text-gray-900 mb-2">A consultar</p>
+                    <ul class="text-gray-600 mb-4 space-y-1 text-left">
+                        <li>✔ Usuarios ilimitados</li>
+                        <li>✔ Personalización total</li>
+                        <li>✔ Integraciones a medida</li>
+                        <li>✔ Soporte dedicado</li>
+                    </ul>
+                    <a th:href="@{/gratis}" class="block w-full text-center py-2 rounded-md bg-indigo-50 text-indigo-700 font-semibold hover:bg-indigo-100 transition">Contactar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

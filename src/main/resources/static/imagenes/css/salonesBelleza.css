@@ -1,0 +1,4 @@
+body { font-family: 'Sora', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; display: flex; flex-direction: column; min-height: 100vh; }
+        main { flex: 1; }
+        .feature-icon-circle { background-color: theme('colors.pink.100'); }
+        .feature-icon-svg { color: theme('colors.pink.600'); }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="@{/css/precios.css}">
+    <title>Gracias</title>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-xl w-full bg-white p-8 rounded-lg shadow-xl text-center animate__animated animate__fadeInUp">
+    <svg class="mx-auto h-24 w-24 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.015 12.91a3 3 0 110-5.82 3 3 0 010 5.82zm-2.293 2.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4a1 1 0 00-1.414-1.414L10 16.586l-1.293-1.293zM12 21a9 9 0 110-18 9 9 0 010 18z"></path>
+    </svg>
+    <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+      ¡Gracias por ponerse en contacto con nosotros!
+    </h2>
+    <p class="mt-4 text-lg text-gray-700">
+      Estamos entusiasmados de ayudarle a llevar su negocio al siguiente nivel con AgendaPro Connect.
+    </p>
+    <p class="mt-6 text-gray-600">
+      Esté atento a su bandeja de entrada; pronto le enviaremos un correo electrónico con más detalles sobre su solicitud y los próximos pasos.
+      Si no lo ve, asegúrese de revisar su carpeta de spam o correo no deseado.
+    </p>
+    <div class="mt-8">
+      <a th:href="@{/}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300">
+        Volver a la página principal
+      </a>
+    </div>
+    <div class="mt-6 text-sm text-gray-500">
+      Si tiene preguntas urgentes, no dude en contactarnos directamente en: <a href="agcc:soporte@agendaproconnect.com" class="text-indigo-600 hover:text-indigo-500">soporte@agendaproconnect.com</a>
+    </div>
+  </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

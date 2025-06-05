@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="@{/css/caracteristicas.css}">
+    <title>Agendamiento Online</title>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="flex-1">
+    <section class="relative feature-bg-light py-24 sm:py-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+                <div class="text-center lg:text-left mb-12 lg:mb-0">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6 animate__animated animate__fadeInDown">
+                        Reservas Sin Límites: <span class="feature-accent">Agendamiento Online</span>
+                    </h1>
+                    <p class="text-xl text-gray-700 mb-8 max-w-xl mx-auto lg:mx-0 animate__animated animate__fadeInUp animate__delay-0-5s">
+                        Permite a tus clientes reservar servicios 24/7 desde cualquier dispositivo, con un sistema inteligente que gestiona tu agenda a la perfección.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 animate__animated animate__fadeInUp animate__delay-1s">
+                        <a th:href="@{/gratis}" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-semibold rounded-full shadow-md text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-300">
+                            Prueba Gratis Ahora
+                        </a>
+                        <a th:href="@{/demo}" class="inline-flex items-center justify-center px-8 py-3 border-2 border-purple-600 text-base font-semibold rounded-full text-purple-700 hover:bg-purple-50 transition-colors duration-300">
+                            Solicitar Demo
+                        </a>
+                    </div>
+                </div>
+                <div class="flex justify-center lg:justify-end animate__animated animate__fadeInRight animate__delay-0-7s">
+                    <img th:src="@{/imagenes/agendamiento.jpg}" alt="Online Booking Website Mockup" class="rounded-xl shadow-2xl transform hover:scale-105 transition-transform duration-300 ease-in-out">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 sm:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Un Sistema de Reservas Intuitivo y Poderoso
+                </h2>
+                <p class="mt-4 text-lg text-gray-600">
+                    AgendaPro Connect te ofrece una solución completa para que tus clientes agenden sin esfuerzo.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 animate__animated animate__fadeInLeft">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-2">Página de Reservas Personalizable</h3>
+                        <p class="text-gray-600">Crea tu propia página de reservas con tu logo y colores, donde tus clientes verán la disponibilidad de tus servicios y personal.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-2">Integración en tu Web y Redes Sociales</h3>
+                        <p class="text-gray-600">Inserta el botón de reserva directamente en tu sitio web, Facebook, Instagram o Google para maximizar la visibilidad.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-2">Sincronización Automática de Agenda</h3>
+                        <p class="text-gray-600">Cada cita reservada online se sincroniza al instante con tu calendario interno, evitando dobles reservas y conflictos.</p>
+                    </div>
+                </div>
+                <div class="flex justify-center animate__animated animate__fadeInRight">
+                    <img th:src="@{/imagenes/agendamiento2.jpg}" alt="Calendar Sync Mockup" class="rounded-xl shadow-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 sm:py-24 feature-bg-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Beneficios Inmediatos del Agendamiento Online
+                </h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md animate__animated animate__fadeInUp">
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 feature-icon-circle">
+                        <svg class="h-8 w-8 feature-icon-svg" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Más Reservas, Menos Esfuerzo</h3>
+                    <p class="text-gray-600">Aumenta el número de citas al permitir que tus clientes reserven en cualquier momento.</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md animate__animated animate__fadeInUp animate__delay-0-1s">
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 feature-icon-circle">
+                        <svg class="h-8 w-8 feature-icon-svg" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Mejora la Experiencia del Cliente</h3>
+                    <p class="text-gray-600">Ofrece comodidad y flexibilidad, un factor clave para la satisfacción y fidelización.</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 bg-white rounded-xl shadow-md animate__animated animate__fadeInUp animate__delay-0-2s">
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 feature-icon-circle">
+                        <svg class="h-8 w-8 feature-icon-svg" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6V6h12v8z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Control Total de tu Agenda</h3>
+                    <p class="text-gray-600">Visualiza y gestiona todas tus citas, tanto online como manuales, en un solo calendario unificado.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-indigo-600 text-white text-center">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-extrabold sm:text-4xl mb-8">
+                ¿Listo para Simplificar tus Reservas?
+            </h2>
+            <p class="text-lg opacity-90 mb-10">
+                Empieza hoy mismo tu prueba gratuita de 14 días y experimenta la eficiencia de AgendaPro Connect.
+            </p>
+            <a th:href="@{/gratis}" class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-semibold rounded-full shadow-lg text-indigo-600 bg-white hover:bg-indigo-100 transition-colors duration-300">
+                ¡Comienza tu Prueba Gratuita!
+            </a>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

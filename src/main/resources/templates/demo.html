@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="@{/css/demo.css}">
+    <title>Demo</title>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+  <section class="bg-gradient-to-br from-indigo-50 to-blue-100 py-24 sm:py-32 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+        <div class="text-center lg:text-left mb-12 lg:mb-0">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6 animate__animated animate__fadeInDown">
+            Experimenta <span class="text-indigo-600">AgendaPro Connect</span> en Vivo
+          </h1>
+          <p class="text-xl text-gray-700 mb-8 max-w-xl mx-auto lg:mx-0 animate__animated animate__fadeInUp animate__delay-0-5s">
+            Obtén un recorrido personalizado por nuestra plataforma y descubre cómo se adapta a las necesidades únicas de tu negocio.
+          </p>
+          <ul class="space-y-4 text-gray-700 text-left mx-auto lg:mx-0 max-w-md lg:max-w-none animate__animated animate__fadeInUp animate__delay-1s">
+            <li class="flex items-start">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3 benefit-icon-circle flex-shrink-0">
+                <svg class="h-5 w-5 benefit-icon-svg" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+              </div>
+              <span>Recorrido guiado por un experto, adaptado a tu industria.</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3 benefit-icon-circle flex-shrink-0">
+                <svg class="h-5 w-5 benefit-icon-svg" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-2a1 1 0 00-.894.553L7.382 10H4a1 1 0 000 2h3.382l1.724 2.447A1 1 0 0010 15a1 1 0 00.894-.553L12.618 12H16a1 1 0 100-2h-3.382l-1.724-2.447A1 1 0 0010 8z" clip-rule="evenodd"></path></svg>
+              </div>
+              <span>Respuestas a tus preguntas específicas y casos de uso.</span>
+            </li>
+            <li class="flex items-start">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3 benefit-icon-circle flex-shrink-0">
+                <svg class="h-5 w-5 benefit-icon-svg" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-7-8a1 1 0 011-1h1a1 1 0 110 2H4a1 1 0 01-1-1zm14 0a1 1 0 011 1H16a1 1 0 110-2h1zm-4-3a1 1 0 11-2 0 1 1 0 012 0zm-2 6a1 1 0 100 2h4a1 1 0 100-2h-4z" clip-rule="evenodd"></path></svg>
+              </div>
+              <span>Descubre cómo AgendaPro Connect puede impulsar tu rentabilidad.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="flex justify-center lg:justify-end animate__animated animate__fadeInRight animate__delay-0-7s">
+          <img th:src="@{https://cdn.prod.website-files.com/6292053974c40677f3ec8971/6769361f219af5d20a906e2a_book-demo-hero-img.webp}" alt="AgendaPro Connect Demo Interface" class="rounded-xl shadow-2xl transform hover:scale-105 transition-transform duration-300 ease-in-out">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-24 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="demo-form-card p-8 sm:p-10 lg:p-12">
+        <h2 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">
+          Completa el Formulario para tu Demo
+        </h2>
+        <p class="text-gray-600 text-lg mb-8 text-center">
+          Nuestro equipo se pondrá en contacto contigo para agendar un horario conveniente.
+        </p>
+
+        <form action="/api/request-demo" method="POST" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="input-group">
+              <label for="firstName" class="block text-sm font-medium text-gray-700 sr-only">Nombre</label>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <i class="fa-solid fa-user icon"></i>
+                </div>
+                <input type="text" name="firstName" id="firstName"
+                       class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                       placeholder="Tu Nombre" required>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="lastName" class="block text-sm font-medium text-gray-700 sr-only">Apellido</label>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <i class="fa-solid fa-user icon"></i>
+                </div>
+                <input type="text" name="lastName" id="lastName"
+                       class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                       placeholder="Tu Apellido" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="email" class="block text-sm font-medium text-gray-700 sr-only">Email Profesional</label>
+            <div class="relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                <i class="fa-solid fa-envelope icon"></i>
+              </div>
+              <input type="email" name="email" id="email"
+                     class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                     placeholder="Email Profesional" required>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="businessName" class="block text-sm font-medium text-gray-700 sr-only">Nombre del Negocio</label>
+            <div class="relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                <i class="fa-solid fa-building icon"></i>
+              </div>
+              <input type="text" name="businessName" id="businessName"
+                     class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                     placeholder="Nombre de tu Negocio" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="input-group">
+              <label for="businessType" class="block text-sm font-medium text-gray-700 sr-only">Tipo de Negocio</label>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <i class="fa-solid fa-briefcase icon"></i>
+                </div>
+                <select id="businessType" name="businessType" required
+                        class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
+                  <option value="" disabled selected>Selecciona tu tipo de negocio</option>
+                  <option value="salon-belleza">Salón de Belleza / Peluquería</option>
+                  <option value="spa">Spa / Centro de Estética</option>
+                  <option value="clinica-salud">Clínica de Salud (Médica, Dental, Fisioterapia)</option>
+                  <option value="centro-terapia">Centro de Terapia / Bienestar</option>
+                  <option value="gimnasio">Gimnasio / Estudio Fitness</option>
+                  <option value="clases-privadas">Clases Particulares / Coaching</option>
+                  <option value="otro">Otro</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <i class="fa-solid fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="teamSize" class="block text-sm font-medium text-gray-700 sr-only">Tamaño del Equipo</label>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <i class="fa-solid fa-users icon"></i>
+                </div>
+                <select id="teamSize" name="teamSize" required
+                        class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
+                  <option value="" disabled selected>Tamaño de tu equipo</option>
+                  <option value="1-5">1-5 personas</option>
+                  <option value="6-10">6-10 personas</option>
+                  <option value="11-25">11-25 personas</option>
+                  <option value="26-50">26-50 personas</option>
+                  <option value="50+">Más de 50 personas</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <i class="fa-solid fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="phone" class="block text-sm font-medium text-gray-700 sr-only">Número de Teléfono</label>
+            <div class="relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                <i class="fa-solid fa-phone icon"></i>
+              </div>
+              <input type="tel" name="phone" id="phone"
+                     class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                     placeholder="Tu Número de Teléfono (Opcional)">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="message" class="block text-sm font-medium text-gray-700 sr-only">Mensaje / Preguntas</label>
+            <div class="relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 pt-4 items-start">
+                <i class="fa-solid fa-comment icon"></i>
+              </div>
+              <textarea name="message" id="message" rows="4"
+                        class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
+                        placeholder="Cuéntanos más sobre tus necesidades o preguntas (Opcional)"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <button type="submit"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300 transform hover:scale-105">
+              Solicitar Mi Demo Personalizada
+            </button>
+          </div>
+        </form>
+
+        <p class="mt-8 text-sm text-gray-500 text-center">
+          Al enviar este formulario, aceptas nuestra <a href="/politica-privacidad" class="font-medium text-indigo-600 hover:text-indigo-500">Política de Privacidad</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl font-extrabold text-gray-900 mb-8">
+        Confianza de Miles de Negocios Como el Tuyo
+      </h2>
+      <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-6">
+        <img class="h-10 w-auto opacity-75 hover:opacity-100 transition-opacity" src="https://placehold.co/100x40/E0E7FF/4F46E5?text=Logo+A" alt="Logo Cliente A">
+        <img class="h-10 w-auto opacity-75 hover:opacity-100 transition-opacity" src="https://placehold.co/100x40/E0E7FF/4F46E5?text=Logo+B" alt="Logo Cliente B">
+        <img class="h-10 w-auto opacity-75 hover:opacity-100 transition-opacity" src="https://placehold.co/100x40/E0E7FF/4F46E5?text=Logo+C" alt="Logo Cliente C">
+        <img class="h-10 w-auto opacity-75 hover:opacity-100 transition-opacity" src="https://placehold.co/100x40/E0E7FF/4F46E5?text=Logo+D" alt="Logo Cliente D">
+        <img class="h-10 w-auto opacity-75 hover:opacity-100 transition-opacity" src="https://placehold.co/100x40/E0E7FF/4F46E5?text=Logo+E" alt="Logo Cliente E">
+      </div>
+      <p class="mt-8 text-lg text-gray-600">
+        Únete a los miles de profesionales que ya están transformando sus negocios con AgendaPro Connect.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

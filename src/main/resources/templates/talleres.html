@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="@{/css/salonesBelleza.css}">
+    <title>Talleres</title>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="flex-1">
+    <section class="relative bg-gradient-to-br from-red-50 to-orange-100 py-24 sm:py-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6 animate__animated animate__fadeInDown">
+                AgendaPro Connect para <span class="text-red-600">Talleres y Servicios</span>
+            </h1>
+            <p class="text-xl text-gray-700 mb-10 max-w-2xl mx-auto animate__animated animate__fadeInUp animate__delay-0-5s">
+                Organiza tus trabajos, asigna técnicos y gestiona el historial de tus servicios de forma eficiente y profesional.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s">
+                <a th:href="@{/gratis}" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-semibold rounded-full shadow-md text-white bg-red-600 hover:bg-red-700 transition-colors duration-300">
+                    Comienza Gratis para tu Taller
+                </a>
+                <a th:href="@{/demo}" class="inline-flex items-center justify-center px-8 py-3 border-2 border-red-600 text-base font-semibold rounded-full text-red-700 hover:bg-red-50 transition-colors duration-300">
+                    Ver Demo Taller
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="py-16 bg-white sm:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Funcionalidades Robustas para tu Negocio de Servicios
+                </h2>
+                <p class="mt-4 text-lg text-gray-600">
+                    Herramientas que impulsan la productividad y satisfacción de tus clientes.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="flex flex-col bg-gray-50 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 animate__animated animate__fadeInUp">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 feature-icon-circle">
+                            <svg class="h-8 w-8 feature-icon-svg" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Gestión de Ordenes de Trabajo</h3>
+                        <p class="text-gray-600">Crea, asigna y sigue el progreso de cada trabajo o servicio desde una plataforma central.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col bg-gray-50 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 animate__animated animate__fadeInUp animate__delay-0-1s">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 feature-icon-circle">
+                            <svg class="h-8 w-8 feature-icon-svg" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Historial de Servicio por Artículo</h3>
+                        <p class="text-gray-600">Accede a un registro detallado de cada vehículo o equipo, incluyendo mantenimientos y reparaciones.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col bg-gray-50 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 animate__animated animate__fadeInUp animate__delay-0-2s">
+                    <div class="p-6">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 feature-icon-circle">
+                            <svg class="h-8 w-8 feature-icon-svg" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Recordatorios de Mantenimiento</h3>
+                        <p class="text-gray-600">Envía alertas automáticas a tus clientes para mantenimientos programados, fidelizándolos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-16 sm:py-24 bg-orange-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+                <div class="text-center lg:text-left">
+                    <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl mb-6">
+                        Optimiza tu Operación y Maximiza tus Ingresos
+                    </h2>
+                    <p class="text-lg text-gray-700 mb-8">
+                        AgendaPro Connect te ayuda a gestionar tus citas, asignar eficientemente a tu personal y llevar un control exhaustivo de cada servicio, mejorando la productividad de tu taller.
+                    </p>
+                    <a href="/caracteristicas" class="inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-800 transition-colors duration-200">
+                        Descubre todas las funciones para talleres <span aria-hidden="true" class="ml-1">→</span>
+                    </a>
+                </div>
+                <div class="mt-10 lg:mt-0 flex justify-center lg:justify-end">
+                    <img th:src="@{/imagenes/servicios.jpg}" alt="Taller Agenda Mockup" class="rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 animate__animated animate__fadeInRight animate__delay-0-5s">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-20 bg-indigo-600 text-white text-center">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-extrabold sm:text-4xl mb-8">
+                ¿Listo para Impulsar la Eficiencia de tu Taller?
+            </h2>
+            <p class="text-lg opacity-90 mb-10">
+                Empieza hoy mismo tu prueba gratuita de 14 días y descubre el poder de una gestión inteligente.
+            </p>
+            <a th:href="@{/gratis}" class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-semibold rounded-full shadow-lg text-indigo-600 bg-white hover:bg-indigo-100 transition-colors duration-300">
+                ¡Comienza Ahora para tu Taller!
+            </a>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

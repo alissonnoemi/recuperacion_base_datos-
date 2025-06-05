@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Nav</title>
 </head>
 <body>
-<nav class="bg-white p-4 shadow-md sticky top-0 z-50">
+<nav th:fragment="navbar" class="bg-white p-4 shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
         <a href="/" class="flex items-center space-x-2 text-gray-800 text-2xl font-bold tracking-wide">
-            <img src="/images/logo_agendapro_connect.png" alt="Logo AgendaPro Connect" class="h-8 w-auto">
+            <img th:src="@{/imagenes/logo.png}" alt="Logo AgendaPro Connect" class="h-16 w-auto">
             <span>AgendaPro Connect</span>
         </a>
 
@@ -168,56 +168,76 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- Para el Menú Móvil ---
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // --- Para los Dropdowns del Mega-Menú (Escritorio y Móvil) ---
         function setupDropdown(buttonId, contentId, containerId) {
             const button = document.getElementById(buttonId);
             const content = document.getElementById(contentId);
-            const container = document.getElementById(containerId); // Para el hover en escritorio
+            const container = containerId ? document.getElementById(containerId) : null;
+            let openedByClick = false;
 
-            // Desktop: Hover behavior
-            if (container) { // Check if container (desktop) exists
+            // Mostrar al pasar el mouse (desktop)
+            if (container) {
                 container.addEventListener('mouseenter', () => {
-                    if (window.innerWidth >= 768) { // Only for desktop sizes
+                    if (window.innerWidth >= 768) {
                         content.classList.remove('hidden');
                     }
                 });
                 container.addEventListener('mouseleave', () => {
-                    if (window.innerWidth >= 768) { // Only for desktop sizes
+                    if (window.innerWidth >= 768 && !openedByClick) {
                         content.classList.add('hidden');
                     }
                 });
             }
 
-            // Mobile: Click behavior for dropdown toggle
+            // Mostrar/ocultar al hacer clic
             if (button && content) {
-                button.addEventListener('click', () => {
-                    // Toggle visibility of the content
-                    content.classList.toggle('hidden');
-
-                    // Rotate arrow icon if present
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        openedByClick = true;
+                    } else {
+                        content.classList.add('hidden');
+                        openedByClick = false;
+                    }
+                    // Rotar flecha
                     const arrowIcon = button.querySelector('svg');
                     if (arrowIcon) {
                         arrowIcon.classList.toggle('rotate-180');
                     }
                 });
             }
+
+            // Cerrar al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (content && !content.classList.contains('hidden')) {
+                    if (!content.contains(e.target) && (!button || !button.contains(e.target))) {
+                        content.classList.add('hidden');
+                        openedByClick = false;
+                        // Quitar rotación de flecha
+                        if (button) {
+                            const arrowIcon = button.querySelector('svg');
+                            if (arrowIcon) {
+                                arrowIcon.classList.remove('rotate-180');
+                            }
+                        }
+                    }
+                }
+            });
         }
 
-        // Setup for Soluciones dropdown
         setupDropdown('soluciones-button', 'soluciones-dropdown-content', 'soluciones-dropdown-container');
-        setupDropdown('mobile-soluciones-button', 'mobile-soluciones-content', null); // No container for mobile
-
-        // Setup for Caracteristicas dropdown
+        setupDropdown('mobile-soluciones-button', 'mobile-soluciones-content', null);
         setupDropdown('caracteristicas-button', 'caracteristicas-dropdown-content', 'caracteristicas-dropdown-container');
-        setupDropdown('mobile-caracteristicas-button', 'mobile-caracteristicas-content', null); // No container for mobile
+        setupDropdown('mobile-caracteristicas-button', 'mobile-caracteristicas-content', null);
+
+        // Menú móvil
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
     });
 </script>
 </body>

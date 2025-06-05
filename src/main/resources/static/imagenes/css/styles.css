@@ -1,0 +1,38 @@
+@keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animate-gradient-shift {
+            background: linear-gradient(270deg, #e0f2fe, #bfdbfe, #a78bfa); /* Colores sutiles de la paleta */
+            background-size: 200% 200%;
+            animation: gradient-shift 15s ease infinite;
+        }
+
+        /* Efectos hover avanzados para tarjetas de características y botones */
+        .feature-card:hover .feature-icon {
+            transform: scale(1.15) rotate(5deg); /* Escala y ligera rotación al icono */
+            transition: transform 0.3s ease-in-out;
+        }
+        .feature-card:hover h3 {
+            color: #4338ca; /* Cambia el color del título al pasar el ratón */
+            transition: color 0.3s ease-in-out;
+        }
+        .button-pulse:hover {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .booking-img-hover:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 5px rgba(99, 102, 241, 0.5); /* Sombra y borde de color */
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .star-rating svg {
+            display: inline-block;
+            margin-right: 2px;
+        }

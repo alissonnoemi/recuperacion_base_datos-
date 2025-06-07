@@ -4,57 +4,77 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class indexController {
+public class IndexController {
     @GetMapping ("/")
     public String mostrarHome() {
         return "index";
     }
     @GetMapping ("/gratis")
     public String mostrarGratis() {
-        return "gratis";
+        return "/pages/gratis";
     }
     @GetMapping ("/salonesBelleza")
     public String mostrarSalonesBelleza() {
-        return "salonesBelleza";
+        return "/pages/salonesBelleza";
     }
     @GetMapping ("/clinicas")
     public String mostrarClinicas() {
-        return "clinicas";
+        return "/pages/clinicas";
     }
     @GetMapping ("/consultorias")
     public String mostrarConsultorias() {
-        return "consultorias";
+        return "/pages/consultorias";
     }
     @GetMapping ("/educacion")
     public String mostrarEducacion() {
-        return "educacion";
+        return "/pages/educacion";
     }
     @GetMapping ("/talleres")
     public String mostrarTalleres() {
-        return "talleres";
+        return "/pages/talleres";
     }
     @GetMapping ("/demo")
     public String mostrarDemo() {
-        return "demo";
+        return "/pages/demo";
     }
     @GetMapping ("/gestionPersonal")
     public String mostrarGestionPersonal() {
-        return "gestionPersonal";
+        return "/pages/gestionPersonal";
     }
     @GetMapping ("/agendamiento")
     public String mostrarAgendamiento() {
-        return "agendamiento";
+        return "/pages/agendamiento";
     }
     @GetMapping ("/control")
     public String mostrarControl() {
-        return "control";
+        return "/pages/control";
     }
     @GetMapping ("/precios")
     public String mostrarPrecios() {
-        return "precios";
+        return "/pages/precios";
     }
     @GetMapping ("/agradecimiento")
     public String mostrarAgradecimiento() {
-        return "agradecimiento";
+        return "/pages/agradecimiento";
+    }
+    @GetMapping ("/contacto")
+    public String mostrarContacto() {
+        return "/pages/contacto";
+    }
+    @GetMapping ("/inicio")
+    public String mostrarInicio() {
+        return "/pages/inicio";
+    }
+    @GetMapping ("inicioProfesionales")
+    public String mostrarInicioProfesionales() {
+        return "/pages/inicioProfesionales";
+    }
+    @GetMapping ("/inicioClientes")
+    public String mostrarInicioClientes() {
+        return "pages/inicioClientes";
+    }
+    @GetMapping ("/registroCliente")
+    public String mostrarRegistroCliente() {
+        return "/pages/registroCliente";
     }
 }

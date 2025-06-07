@@ -5,14 +5,14 @@ body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-color: theme('colors.gray.50'); /* Fondo ligero para la página */
+            background-color: theme('colors.gray.50');
         }
         main {
             flex: 1;
         }
         .demo-form-card {
             background-color: white;
-            border-radius: 1rem; /* rounded-xl */
+            border-radius: 1rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* shadow-2xl */
         }
         .benefit-icon-circle {
@@ -25,7 +25,7 @@ body {
             position: relative;
         }
         .input-group input, .input-group select, .input-group textarea {
-            padding-left: 3rem; /* Espacio para el icono */
+            padding-left: 3rem;
         }
         .input-group .icon {
             position: absolute;
@@ -33,11 +33,11 @@ body {
             top: 50%;
             transform: translateY(-50%);
             color: theme('colors.gray.400');
-            pointer-events: none; /* Asegura que el icono no interfiera con el click */
+            pointer-events: none;
         }
-        /* Ajuste para textarea icon */
+
         .input-group textarea + .icon {
-            top: 1.25rem; /* Alinea con el inicio del texto del textarea */
+            top: 1.25rem;
             transform: translateY(0%);
         }
         .input-field:focus {

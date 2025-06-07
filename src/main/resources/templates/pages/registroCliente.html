@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Cliente - AgendaPro Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/salonesBelleza.css}">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-xl animate__animated animate__fadeInDown">
+    <div class="text-center mb-8">
+      <img class="mx-auto h-16 w-auto" th:src="@{/imagenes/logo.png}" alt="AgendaPro Connect Logo">
+      <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+        Crea tu Cuenta de Cliente
+      </h2>
+      <p class="mt-2 text-sm text-gray-600">
+        Reserva y gestiona tus citas fácilmente.
+      </p>
+    </div>
+
+    <form class="space-y-6" action="/registro-cliente" method="POST">
+      <div>
+        <label for="fullNameClient" class="block text-sm font-medium text-gray-700">Tu Nombre Completo</label>
+        <div class="mt-1">
+          <input id="fullNameClient" name="fullName" type="text" autocomplete="name" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+      </div>
+
+      <div>
+        <label for="emailClient" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+        <div class="mt-1">
+          <input id="emailClient" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+      </div>
+
+      <div>
+        <label for="passwordClient" class="block text-sm font-medium text-gray-700">Contraseña</label>
+        <div class="mt-1">
+          <input id="passwordClient" name="password" type="password" autocomplete="new-password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+      </div>
+
+      <div class="flex items-center">
+        <input id="termsAndPrivacyClient" name="termsAndPrivacy" type="checkbox" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+        <label for="termsAndPrivacyClient" class="ml-2 block text-sm text-gray-900">
+          Acepto los <a href="/terminos-y-condiciones" class="font-medium text-indigo-600 hover:text-indigo-500">Términos y Condiciones</a> y la <a href="/politica-privacidad" class="font-medium text-indigo-600 hover:text-indigo-500">Política de Privacidad</a>.
+        </label>
+      </div>
+
+      <div>
+        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300">
+          Crear Cuenta
+        </button>
+      </div>
+    </form>
+
+    <div class="mt-8 text-center text-sm text-gray-600">
+      ¿Ya tienes una cuenta de cliente? <a href="/login-cliente" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia sesión aquí</a>
+    </div>
+  </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

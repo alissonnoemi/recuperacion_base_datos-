@@ -1,0 +1,8 @@
+          body { font-family: 'Sora', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; display: flex; flex-direction: column; min-height: 100vh; }
+                 main { flex: 1; }
+                 .hero-background {
+                     background-image: url('https://mantpress.com/wp-content/uploads/24-08-22-An%CC%83ade-el-inicio-de-sesio%CC%81n-mediante-red-social-en-tu-WordPress-de-forma-sencilla.png');
+                     background-size: cover;
+                     background-position: center;
+                     background-repeat: no-repeat;
+                 }

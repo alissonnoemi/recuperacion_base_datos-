@@ -9,10 +9,6 @@ public class IndexController {
     public String mostrarHome() {
         return "index";
     }
-    @GetMapping ("/gratis")
-    public String mostrarGratis() {
-        return "/pages/gratis";
-    }
     @GetMapping ("/salonesBelleza")
     public String mostrarSalonesBelleza() {
         return "/pages/salonesBelleza";
@@ -69,12 +65,5 @@ public class IndexController {
     public String mostrarInicioProfesionales() {
         return "/pages/inicioProfesionales";
     }
-    @GetMapping ("/inicioClientes")
-    public String mostrarInicioClientes() {
-        return "pages/inicioClientes";
-    }
-    @GetMapping ("/registroCliente")
-    public String mostrarRegistroCliente() {
-        return "/pages/registroCliente";
-    }
+
 }

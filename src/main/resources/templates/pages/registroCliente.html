@@ -27,7 +27,7 @@
       </p>
     </div>
 
-    <form class="space-y-6" action="/registro-cliente" method="POST">
+    <form class="space-y-6" th:action="@{/registroCliente}" method="post" th:object="${cliente}">
       <div>
         <label for="fullNameClient" class="block text-sm font-medium text-gray-700">Tu Nombre Completo</label>
         <div class="mt-1">
@@ -36,16 +36,16 @@
       </div>
 
       <div>
-        <label for="emailClient" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+        <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
         <div class="mt-1">
-          <input id="emailClient" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
         </div>
       </div>
 
       <div>
-        <label for="passwordClient" class="block text-sm font-medium text-gray-700">Contraseña</label>
+        <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
         <div class="mt-1">
-          <input id="passwordClient" name="password" type="password" autocomplete="new-password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <input id="password" name="password" type="password" autocomplete="new-password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
         </div>
       </div>
 
@@ -64,7 +64,7 @@
     </form>
 
     <div class="mt-8 text-center text-sm text-gray-600">
-      ¿Ya tienes una cuenta de cliente? <a href="/login-cliente" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia sesión aquí</a>
+      ¿Ya tienes una cuenta de cliente? <a th:href="@[/inicioCliente}" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia sesión aquí</a>
     </div>
   </div>
 </main>

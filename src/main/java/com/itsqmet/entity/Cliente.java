@@ -5,12 +5,14 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Contacto {
+public class Cliente {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  long id;
-    @Column(unique = true)
-    private String remitente;
+    private Long id;
+    @Column(nullable = false, unique = true)
     private String email;
-    private String mensaje;;
+    private String password;
+
+
 }

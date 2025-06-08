@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface negocioRepositorio extends JpaRepository <Negocio, Long> {
-    List <Negocio> findByNombreNegocioContainingIgnoreCase(String nombreNegocio);
+    List <Negocio> findBytipoNegocioContainingIgnoreCase(String nombreNegocio);
 
 }

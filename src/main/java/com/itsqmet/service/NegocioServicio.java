@@ -15,11 +15,11 @@ public class NegocioServicio {
     public  List <Negocio> mostrarNegocios() {
         return negocioRepositorio.findAll();
     }
-    public List <Negocio> buscarNegocioPorNombre(String buscarNombre) {
-        if (buscarNombre == null || buscarNombre.isEmpty()) {
+    public List <Negocio> buscarNegocioPorNombre(String buscarNegocio) {
+        if (buscarNegocio == null || buscarNegocio.isEmpty()) {
             return negocioRepositorio.findAll();
         } else {
-            return negocioRepositorio.findByNombreNegocioContainingIgnoreCase(buscarNombre);
+            return negocioRepositorio.findBytipoNegocioContainingIgnoreCase(buscarNegocio);
         }
     }
     public Optional<Negocio> buscarNegocioPorId (Long id) {

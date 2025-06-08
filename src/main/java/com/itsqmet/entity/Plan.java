@@ -14,6 +14,4 @@ public class Plan {
     private String nombrePlan;
     private String descripcion;
     private BigDecimal precioMensual;
-    private String caracteristicas;
-
 }

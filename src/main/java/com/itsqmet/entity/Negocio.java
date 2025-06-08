@@ -8,11 +8,10 @@ import lombok.Data;
 public class Negocio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  long id;
+    private long id;
     @Column(unique = true)
     private String nombreCompleto;
     private String emailProfesional;
-    private String clave;
     private String nombreNegocio;
     private String tipoNegocio;
 

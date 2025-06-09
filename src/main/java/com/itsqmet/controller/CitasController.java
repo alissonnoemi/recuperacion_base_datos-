@@ -2,9 +2,11 @@ package com.itsqmet.controller;
 
 import com.itsqmet.entity.Citas;
 import com.itsqmet.service.CitasServicio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,9 +39,16 @@ public class CitasController {
         return "pages/cita";
     }
     @PostMapping("/guardarCita")
-    public String crearCita(Citas cita){
-        citasServicio.guardarCita(cita);
-        return "redirect:/citas";
+    public String crearCita(@Valid @ModelAttribute ("cita") Citas cita,
+                            BindingResult bindingResult, Model model) {
+        if (  bindingResult.hasErrors()) {
+            model.addAttribute("cita", cita);
+            return "pages/cita";
+        } else {
+            citasServicio.guardarCita(cita);
+            return "redirect:/listaCita";
+        }
+
     }
     //actualizar
     @GetMapping("/editarCita/{id}")
@@ -54,5 +63,6 @@ public class CitasController {
         citasServicio.eliminarCita(id);
         return "redirect:/citas";
     }
+
 
 }

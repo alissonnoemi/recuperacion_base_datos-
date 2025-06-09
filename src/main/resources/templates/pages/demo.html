@@ -60,8 +60,7 @@
         <p class="text-gray-600 text-lg mb-8 text-center">
           Nuestro equipo se pondrá en contacto contigo para agendar un horario conveniente.
         </p>
-
-        <form action="/api/request-demo" method="POST" class="space-y-6">
+        <form th:action="@{/guardarDemo}" method="post" class="space-y-6" th:object="${demo}">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="input-group">
               <label for="firstName" class="block text-sm font-medium text-gray-700 sr-only">Nombre</label>
@@ -69,9 +68,10 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                   <i class="fa-solid fa-user icon"></i>
                 </div>
-                <input type="text" name="firstName" id="firstName"
+                <input id="firstName" type="text" th:field="*{firstName}"
                        class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
-                       placeholder="Tu Nombre" required>
+                       placeholder="Tu Nombre">
+                <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-red-600 text-sm mt-1"></span>
               </div>
             </div>
             <div class="input-group">
@@ -80,9 +80,10 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                   <i class="fa-solid fa-user icon"></i>
                 </div>
-                <input type="text" name="lastName" id="lastName"
+                <input id="lastName" type="text" th:field="*{lastName}"
                        class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
-                       placeholder="Tu Apellido" required>
+                       placeholder="Tu Apellido">
+                <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-red-600 text-sm mt-1"></span>
               </div>
             </div>
           </div>
@@ -93,9 +94,10 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                 <i class="fa-solid fa-envelope icon"></i>
               </div>
-              <input type="email" name="email" id="email"
+              <input id="email" type="email" th:field="*{email}"
                      class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
-                     placeholder="Email Profesional" required>
+                     placeholder="Email Profesional">
+              <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-600 text-sm mt-1"></span>
             </div>
           </div>
 
@@ -105,9 +107,10 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                 <i class="fa-solid fa-building icon"></i>
               </div>
-              <input type="text" name="businessName" id="businessName"
+              <input id="businessName" type="text" th:field="*{businessName}"
                      class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
-                     placeholder="Nombre de tu Negocio" required>
+                     placeholder="Nombre de tu Negocio">
+              <span th:if="${#fields.hasErrors('businessName')}" th:errors="*{businessName}" class="text-red-600 text-sm mt-1"></span>
             </div>
           </div>
 
@@ -118,9 +121,9 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                   <i class="fa-solid fa-briefcase icon"></i>
                 </div>
-                <select id="businessType" name="businessType" required
+                <select id="businessType" th:field="*{businessType}"
                         class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
-                  <option value="" disabled selected>Selecciona tu tipo de negocio</option>
+                  <option value="" disabled>Selecciona tu tipo de negocio</option>
                   <option value="salon-belleza">Salón de Belleza / Peluquería</option>
                   <option value="spa">Spa / Centro de Estética</option>
                   <option value="clinica-salud">Clínica de Salud (Médica, Dental, Fisioterapia)</option>
@@ -129,6 +132,7 @@
                   <option value="clases-privadas">Clases Particulares / Coaching</option>
                   <option value="otro">Otro</option>
                 </select>
+                <span th:if="${#fields.hasErrors('businessType')}" th:errors="*{businessType}" class="text-red-600 text-sm mt-1"></span>
                 <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <i class="fa-solid fa-chevron-down text-gray-400"></i>
                 </div>
@@ -140,15 +144,16 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                   <i class="fa-solid fa-users icon"></i>
                 </div>
-                <select id="teamSize" name="teamSize" required
+                <select id="teamSize" th:field="*{teamSize}"
                         class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
-                  <option value="" disabled selected>Tamaño de tu equipo</option>
+                  <option value="" disabled>Tamaño de tu equipo</option>
                   <option value="1-5">1-5 personas</option>
                   <option value="6-10">6-10 personas</option>
                   <option value="11-25">11-25 personas</option>
                   <option value="26-50">26-50 personas</option>
                   <option value="50+">Más de 50 personas</option>
                 </select>
+                <span th:if="${#fields.hasErrors('teamSize')}" th:errors="*{teamSize}" class="text-red-600 text-sm mt-1"></span>
                 <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <i class="fa-solid fa-chevron-down text-gray-400"></i>
                 </div>
@@ -162,9 +167,10 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                 <i class="fa-solid fa-phone icon"></i>
               </div>
-              <input type="tel" name="phone" id="phone"
+              <input id="phone" type="tel" th:field="*{phone}"
                      class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
-                     placeholder="Tu Número de Teléfono (Opcional)">
+                     placeholder="Tu Número de Teléfono ">
+              <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="text-red-600 text-sm mt-1"></span>
             </div>
           </div>
 
@@ -174,9 +180,10 @@
               <div class="absolute inset-y-0 left-0 pl-3 pt-4 items-start">
                 <i class="fa-solid fa-comment icon"></i>
               </div>
-              <textarea name="message" id="message" rows="4"
+              <textarea id="message" th:field="*{message}" rows="4"
                         class="input-field block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"
                         placeholder="Cuéntanos más sobre tus necesidades o preguntas (Opcional)"></textarea>
+              <span th:if="${#fields.hasErrors('message')}" th:errors="*{message}" class="text-red-600 text-sm mt-1"></span>
             </div>
           </div>
 
@@ -187,7 +194,6 @@
             </button>
           </div>
         </form>
-
         <p class="mt-8 text-sm text-gray-500 text-center">
           Al enviar este formulario, aceptas nuestra <a href="/politica-privacidad" class="font-medium text-indigo-600 hover:text-indigo-500">Política de Privacidad</a>.
         </p>

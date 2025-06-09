@@ -24,7 +24,7 @@ public class ClienteController {
         if (autenticado) {
             return "redirect:/cita";
         } else {
-            model.addAttribute("error", "Usuario o contraseña incorrectos");
+            model.addAttribute("mensajeError", "Usuario o contraseña incorrectos");
             return "pages/inicioClientes";
         }
     }

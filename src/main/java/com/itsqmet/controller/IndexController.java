@@ -61,5 +61,4 @@ public class IndexController {
     public String mostrarInicio() {
         return "/pages/inicio";
     }
-
 }

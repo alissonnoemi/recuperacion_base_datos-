@@ -10,6 +10,14 @@ public class LogNegocio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
+    private String nombreNegocio;
     private String email;
     private String password;
+    private String tipoNegocio;
+    private String direccion;
+    private String telefono;
+
+
+
+
 }

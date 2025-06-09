@@ -11,7 +11,7 @@ public class Plan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  long id;
     @Column(unique = true)
-    private String nombrePlan;
+    private String nombre;
     private String descripcion;
-    private BigDecimal precioMensual;
+    private Double precio;
 }

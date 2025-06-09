@@ -15,8 +15,7 @@ import java.util.Optional;
 public class NegocioServicio {
 @Autowired
     private negocioRepositorio negocioRepositorio;
-@Autowired
-private loginNegocioRepositorio loginNegocioRepositorio;
+
     public  List <Negocio> mostrarNegocios() {
         return negocioRepositorio.findAll();
     }
@@ -37,11 +36,5 @@ private loginNegocioRepositorio loginNegocioRepositorio;
         negocioRepositorio.deleteById(id);
     }
 
-    public boolean validarCredenciales(String email, String password) {
-        List<LogNegocio> logNegocios = loginNegocioRepositorio.findByEmailContainingIgnoreCase(email);
-        if (logNegocios.isEmpty()) return false;
-        LogNegocio logNegocio = logNegocios.get(0);
-        return logNegocio.getPassword().equals(password);
-    }
 
 }

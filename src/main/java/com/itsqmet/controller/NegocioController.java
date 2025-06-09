@@ -3,9 +3,11 @@ package com.itsqmet.controller;
 import com.itsqmet.entity.LogNegocio;
 import com.itsqmet.entity.Negocio;
 import com.itsqmet.service.NegocioServicio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,9 +36,14 @@ public class NegocioController {
 
     // Guardar negocio
     @PostMapping("/guardarNegocio")
-    public String crearNegocio(@ModelAttribute Negocio negocio) {
-        negocioServicio.guardarNegocio(negocio);
-        return "redirect:/negocios";
+    public String crearNegocio(@Valid  @ModelAttribute("negocio") Negocio negocio,
+    BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("negocio", negocio);
+            return "pages/gratis";
+        } else {
+            return "redirect:/agradecimiento";
+        }
     }
 
     // Editar negocio
@@ -57,23 +64,6 @@ public class NegocioController {
     public String mostrarProfesionales() {
         return "/pages/profesionales";
     }
-    // Login de negocio
-    @GetMapping("/inicioProfesionales")
-    public String mostrarInicioProfesionales(Model model) {
-        model.addAttribute("logNegocio", new LogNegocio());
-        return "pages/inicioProfesionales";
-    }
 
-    @PostMapping("/loginNegocio")
-    public String procesarLogin(@ModelAttribute LogNegocio logNegocio, Model model) {
-        boolean autenticado = negocioServicio.validarCredenciales(logNegocio.getEmail(), logNegocio.getPassword());
-        if (autenticado) {
-            return "redirect:/profesionales";
-        } else {
-            model.addAttribute("error", "Usuario o contraseña incorrectos");
-            model.addAttribute("logNegocio", new LogNegocio()); // Para que vuelva a funcionar el form
-            return "pages/inicioProfesionales";
-        }
-    }
 
 }

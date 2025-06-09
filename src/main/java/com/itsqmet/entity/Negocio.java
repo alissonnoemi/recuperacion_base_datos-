@@ -12,6 +12,7 @@ public class Negocio {
     @Column(unique = true)
     private String nombreCompleto;
     private String emailProfesional;
+    private String contrasenia;
     private String nombreNegocio;
     private String tipoNegocio;
 

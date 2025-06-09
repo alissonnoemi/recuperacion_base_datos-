@@ -4,7 +4,9 @@ import com.itsqmet.entity.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface clienteRepositorio extends JpaRepository<Cliente, Long> {
-    Cliente findByEmail(String email);
+   List <Cliente> findByEmailContainingIgnoreCase(String email);
 }

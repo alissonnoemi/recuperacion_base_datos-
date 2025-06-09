@@ -30,8 +30,7 @@
 </div>
 
 <div class="container mx-auto p-8 bg-white shadow-xl rounded-lg mb-10 fade-in max-w-2xl">
-    <form th:action="@{/guardarCita}" method="post" class="space-y-6" th:object="${cita}" >
-
+    <form th:action="@{/guardarCita}" method="post" class="space-y-6" th:object="${cita}">
         <div class="p-6 bg-blue-50 rounded-lg shadow-sm border border-blue-200 slide-in-left">
             <h3 class="text-2xl font-bold text-blue-700 mb-4 pb-2 border-b border-blue-300 flex items-center">
                 <i class="fas fa-user-circle mr-3"></i>Datos del Cliente
@@ -43,9 +42,9 @@
                 </div>
                 <div>
                     <label for="cliente" class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo del Cliente:</label>
-                    <input type="text" id="cliente" name="cliente" placeholder="Ej: Juan Pérez"
+                    <input type="text" id="cliente" th:field="*{cliente}" placeholder="Ej: Juan Pérez"
                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight
-                                      focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in-out">
+                                  focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in-out">
                 </div>
             </div>
         </div>
@@ -57,40 +56,38 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="servicio" class="block text-gray-700 text-sm font-bold mb-2">Seleccionar Servicio:</label>
-                    <select id="servicio" name="servicio"
+                    <select id="servicio" th:field="*{servicio}"
                             class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight
-                                       focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-green-400 transition duration-200 ease-in-out" >
+                                   focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-green-400 transition duration-200 ease-in-out">
                         <option value="">-- Seleccione un Servicio --</option>
-                        <option value="1">Corte de Pelo y Barba</option>
-                        <option value="2">Masaje Relajante (60 min)</option>
-                        <option value="3">Consulta Dental General</option>
-                        <option value="4">Manicura y Pedicura</option>
-                        <option value="5">Tratamiento Facial Hidratante</option>
-                        <option value="6">Fisioterapia (Sesión Completa)</option>
-                        <option value="7">Corte de Pelo Mujer</option>
-                        <option value="8">Tinte de Cabello</option>
-
+                        <option value="Corte de Pelo y Barba">Corte de Pelo y Barba</option>
+                        <option value="Masaje Relajante (60 min)">Masaje Relajante (60 min)</option>
+                        <option value="Consulta Dental General">Consulta Dental General</option>
+                        <option value="Manicura y Pedicura">Manicura y Pedicura</option>
+                        <option value="Tratamiento Facial Hidratante">Tratamiento Facial Hidratante</option>
+                        <option value="Fisioterapia (Sesión Completa)">Fisioterapia (Sesión Completa)</option>
+                        <option value="Corte de Pelo Mujer">Corte de Pelo Mujer</option>
+                        <option value="Tinte de Cabello">Tinte de Cabello</option>
                     </select>
                 </div>
-
             </div>
             <div class="mt-4">
                 <label for="especialista" class="block text-gray-700 text-sm font-bold mb-2">Seleccionar Profesional:</label>
-                <select id="especialista" name="especialista"
+                <select id="especialista" th:field="*{especialista}"
                         class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight
-                                   focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-green-400 transition duration-200 ease-in-out">
+                               focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-green-400 transition duration-200 ease-in-out">
                     <option value="">-- Seleccione un Profesional --</option>
-                    <option value="101">Ana García (Estilista)</option>
-                    <option value="102">Dr. Ricardo Solís (Dentista)</option>
-                    <option value="103">María Castro (Masajista)</option>
-                    <option value="104">Carlos López (Fisioterapeuta)</option>
-                    <option value="105">Laura Pérez (Manicurista)</option>
-                    <option value="106">Sofía Martínez (Peluquera)</option>
-                    <option value="107">Luis Fernández (Barbero)</option>
-                    <option value="108">Claudia Torres (Esteticista)</option>
-                    <option value="109">Javier Ruiz (Quiropráctico)</option>
-                    <option value="110">Patricia Jiménez (Cosmetóloga)</option>
-                    <option value="111">Andrés Morales (Quiromasajista)</option>
+                    <option value="Ana García (Estilista)">Ana García (Estilista)</option>
+                    <option value="Dr. Ricardo Solís (Dentista)">Dr. Ricardo Solís (Dentista)</option>
+                    <option value="María Castro (Masajista)">María Castro (Masajista)</option>
+                    <option value="Carlos López (Fisioterapeuta)">Carlos López (Fisioterapeuta)</option>
+                    <option value="Laura Pérez (Manicurista)">Laura Pérez (Manicurista)</option>
+                    <option value="Sofía Martínez (Peluquera)">Sofía Martínez (Peluquera)</option>
+                    <option value="Luis Fernández (Barbero)">Luis Fernández (Barbero)</option>
+                    <option value="Claudia Torres (Esteticista)">Claudia Torres (Esteticista)</option>
+                    <option value="Javier Ruiz (Quiropráctico)">Javier Ruiz (Quiropráctico)</option>
+                    <option value="Patricia Jiménez (Cosmetóloga)">Patricia Jiménez (Cosmetóloga)</option>
+                    <option value="Andrés Morales (Quiromasajista)">Andrés Morales (Quiromasajista)</option>
                 </select>
             </div>
         </div>
@@ -101,18 +98,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="fechaCita" class="block text-gray-700 text-sm font-bold mb-2">Fecha de la Cita:</label>
-                    <input type="date" id="fechaCita" name="fechaCita"
+                    <input type="date" id="fechaCita" th:field="*{fechaCita}"
                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight
-                                      focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-purple-400 transition duration-200 ease-in-out">
+                                  focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-purple-400 transition duration-200 ease-in-out">
                 </div>
             </div>
         </div>
-
         <div class="text-center mt-8">
             <button type="submit"
                     class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg
-                               transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-indigo-300
-                               flex items-center justify-center mx-auto space-x-2">
+                           transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-indigo-300
+                           flex items-center justify-center mx-auto space-x-2">
                 <i class="fas fa-calendar-check mr-2"></i>Agendar Cita
             </button>
         </div>

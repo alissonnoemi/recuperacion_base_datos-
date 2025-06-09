@@ -11,3 +11,4 @@ public interface negocioRepositorio extends JpaRepository <Negocio, Long> {
     List <Negocio> findBytipoNegocioContainingIgnoreCase(String nombreNegocio);
 
 }
+

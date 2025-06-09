@@ -13,8 +13,10 @@ public class ClienteServicio {
     private clienteRepositorio clienteRepositorio;
 
     public boolean validarCredenciales(String email, String password) {
-        Cliente cliente = clienteRepositorio.findByEmail(email);
-        return cliente != null && cliente.getPassword().equals(password);
+        java.util.List<Cliente> clientes = clienteRepositorio.findByEmailContainingIgnoreCase(email);
+        if (clientes.isEmpty()) return false;
+        Cliente cliente = clientes.get(0);
+        return cliente.getPassword().equals(password);
     }
     public void registrarCliente(Cliente cliente) {
         clienteRepositorio.save(cliente);

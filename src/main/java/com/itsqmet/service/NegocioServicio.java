@@ -1,6 +1,9 @@
 package com.itsqmet.service;
 
+import com.itsqmet.entity.Cliente;
+import com.itsqmet.entity.LogNegocio;
 import com.itsqmet.entity.Negocio;
+import com.itsqmet.repository.loginNegocioRepositorio;
 import com.itsqmet.repository.negocioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,8 @@ import java.util.Optional;
 public class NegocioServicio {
 @Autowired
     private negocioRepositorio negocioRepositorio;
+@Autowired
+private loginNegocioRepositorio loginNegocioRepositorio;
     public  List <Negocio> mostrarNegocios() {
         return negocioRepositorio.findAll();
     }
@@ -32,5 +37,11 @@ public class NegocioServicio {
         negocioRepositorio.deleteById(id);
     }
 
+    public boolean validarCredenciales(String email, String password) {
+        List<LogNegocio> logNegocios = loginNegocioRepositorio.findByEmailContainingIgnoreCase(email);
+        if (logNegocios.isEmpty()) return false;
+        LogNegocio logNegocio = logNegocios.get(0);
+        return logNegocio.getPassword().equals(password);
+    }
 
 }

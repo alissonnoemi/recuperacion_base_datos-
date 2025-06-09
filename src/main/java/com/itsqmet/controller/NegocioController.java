@@ -1,5 +1,6 @@
 package com.itsqmet.controller;
 
+import com.itsqmet.entity.LogNegocio;
 import com.itsqmet.entity.Negocio;
 import com.itsqmet.service.NegocioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,39 +16,64 @@ public class NegocioController {
     @Autowired
     private NegocioServicio negocioServicio;
 
-    //leer
+    // Listar negocios
     @GetMapping("/negocios")
-    public String listarNegocios(@RequestParam(name = "buscarNombre", required = false, defaultValue = "")
-                                 String buscarNegocio, Model model) {
-        List<Negocio>negocios= negocioServicio.buscarNegocioPorNombre(buscarNegocio);
+    public String listarNegocios(@RequestParam(name = "buscarNombre", required = false, defaultValue = "") String buscarNegocio, Model model) {
+        List<Negocio> negocios = negocioServicio.buscarNegocioPorNombre(buscarNegocio);
         model.addAttribute("negocios", negocios);
         model.addAttribute("buscarNombre", buscarNegocio);
         return "pages/listaNegocio";
     }
 
-    //insertar
-    @GetMapping ("/gratis")
-    public String negocios(Model model){
+    // Formulario de registro de negocio
+    @GetMapping("/gratis")
+    public String negocios(Model model) {
         model.addAttribute("negocio", new Negocio());
         return "pages/gratis";
     }
-    @PostMapping ("/guardarNegocio")
-    public String crearNegocio( Negocio negocio){
+
+    // Guardar negocio
+    @PostMapping("/guardarNegocio")
+    public String crearNegocio(@ModelAttribute Negocio negocio) {
         negocioServicio.guardarNegocio(negocio);
         return "redirect:/negocios";
     }
-    //actualizar
+
+    // Editar negocio
     @GetMapping("/editarNegocio/{id}")
-    public String actualizarNegocio(@PathVariable Long id, Model model){
+    public String actualizarNegocio(@PathVariable Long id, Model model) {
         Optional<Negocio> negocio = negocioServicio.buscarNegocioPorId(id);
-        model.addAttribute("negocio", negocio);
+        model.addAttribute("negocio", negocio.orElse(new Negocio()));
         return "pages/gratis";
     }
-    //eliminar
+
+    // Eliminar negocio
     @GetMapping("/eliminarNegocio/{id}")
-    public String eliminarNegocio(@PathVariable Long id, Model model){
+    public String eliminarNegocio(@PathVariable Long id) {
         negocioServicio.eliminarNegocio(id);
         return "redirect:/negocios";
+    }
+    @GetMapping ("/profesionales")
+    public String mostrarProfesionales() {
+        return "/pages/profesionales";
+    }
+    // Login de negocio
+    @GetMapping("/inicioProfesionales")
+    public String mostrarInicioProfesionales(Model model) {
+        model.addAttribute("logNegocio", new LogNegocio());
+        return "pages/inicioProfesionales";
+    }
+
+    @PostMapping("/loginNegocio")
+    public String procesarLogin(@ModelAttribute LogNegocio logNegocio, Model model) {
+        boolean autenticado = negocioServicio.validarCredenciales(logNegocio.getEmail(), logNegocio.getPassword());
+        if (autenticado) {
+            return "redirect:/profesionales";
+        } else {
+            model.addAttribute("error", "Usuario o contraseña incorrectos");
+            model.addAttribute("logNegocio", new LogNegocio()); // Para que vuelva a funcionar el form
+            return "pages/inicioProfesionales";
+        }
     }
 
 }

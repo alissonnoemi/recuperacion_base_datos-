@@ -18,5 +18,4 @@ public class Citas {
     private Date fechaCita;
     private String servicio;
     private String especialista;
-
 }

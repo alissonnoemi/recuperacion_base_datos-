@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Citas para el Profesional: ' + ${profesional.nombreCompleto}"></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4" th:text="'Historial de Citas para ' + ${profesional.nombreCompleto}"></h2>
+
+    <div th:if="${citas.isEmpty()}" class="bg-gray-200 text-gray-700 p-3 rounded-md mb-4">
+        No hay citas registradas para este profesional.
+    </div>
+
+    <div th:unless="${citas.isEmpty()}" class="overflow-x-auto">
+        <table class="min-w-full bg-white shadow-md rounded-md">
+            <thead class="bg-gray-800 text-white">
+            <tr>
+                <th class="py-3 px-4 text-left">ID Cita</th>
+                <th class="py-3 px-4 text-left">Fecha y Hora</th>
+                <th class="py-3 px-4 text-left">Estado</th>
+                <th class="py-3 px-4 text-left">Paciente</th>
+                <th class="py-3 px-4 text-left">Servicio</th>
+                <th class="py-3 px-4 text-left">Duración (Min)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cita : ${citas}" class="hover:bg-gray-100">
+                <td class="py-3 px-4" th:text="${cita.idCita}"></td>
+                <td class="py-3 px-4" th:text="${#temporals.format(cita.fechaHoraInicio, 'dd-MM-yyyy HH:mm')}"></td>
+                <td class="py-3 px-4" th:text="${cita.estadoCita}"></td>
+                <td class="py-3 px-4" th:text="${cita.paciente.nombreCompleto}"></td>
+                <td class="py-3 px-4" th:text="${cita.servicio.nombre}"></td>
+                <td class="py-3 px-4" th:text="${cita.duracionServicioMinutos}"></td>
+            </tr>
+            </tbody>
+            </tbody>
+        </table>
+    </div>
+    <a th:href="@{/profesionales/listado}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Volver al Listado de Profesionales</a>
+</div>
+</body>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</html>

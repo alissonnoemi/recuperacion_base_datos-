@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -27,32 +28,84 @@
     </div>
 
     <form class="space-y-6" th:action="@{/registroCliente}" method="post" th:object="${cliente}">
-      <div>
-        <label for="fullNameClient" class="block text-sm font-medium text-gray-700">Tu Nombre Completo</label>
-        <div class="mt-1">
-          <input id="fullNameClient" name="fullName" type="text" autocomplete="name" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-        </div>
+      <!-- Errores globales -->
+      <div th:if="${#fields.hasErrors('global')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span th:each="err : ${#fields.errors('global')}" th:text="${err}">Error</span>
+      </div>
+      <!-- Mensaje de error personalizado -->
+      <div th:if="${mensajeTipo == 'error'}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span th:text="${mensajeCuerpo}"></span>
       </div>
 
+      <!-- Nombre completo -->
+      <div>
+        <label for="nombreCompleto" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
+        <div class="mt-1">
+          <input id="nombreCompleto" th:field="*{nombreCompleto}" type="text" autocomplete="name" required
+                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                 th:classappend="${#fields.hasErrors('nombreCompleto') ? 'border-red-500' : ''}">
+        </div>
+        <p th:if="${#fields.hasErrors('nombreCompleto')}" th:errors="*{nombreCompleto}" class="text-red-500 text-xs italic mt-1"></p>
+      </div>
+
+      <!-- Correo electrónico -->
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
         <div class="mt-1">
-          <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <input id="email" th:field="*{email}" type="email" autocomplete="email" required
+                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                 th:classappend="${#fields.hasErrors('email') ? 'border-red-500' : ''}">
         </div>
+        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-xs italic mt-1"></p>
       </div>
 
+      <!-- Contraseña -->
       <div>
         <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
         <div class="mt-1">
-          <input id="password" name="password" type="password" autocomplete="new-password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <input id="password" th:field="*{password}" type="password" autocomplete="new-password" required
+                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                 th:classappend="${#fields.hasErrors('password') ? 'border-red-500' : ''}">
         </div>
+        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-red-500 text-xs italic mt-1"></p>
       </div>
 
-      <div class="flex items-center">
-        <input id="termsAndPrivacyClient" name="termsAndPrivacy" type="checkbox" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-        <label for="termsAndPrivacyClient" class="ml-2 block text-sm text-gray-900">
-          Acepto los <a href="/terminos-y-condiciones" class="font-medium text-indigo-600 hover:text-indigo-500">Términos y Condiciones</a> y la <a href="/politica-privacidad" class="font-medium text-indigo-600 hover:text-indigo-500">Política de Privacidad</a>.
-        </label>
+      <!-- Fecha de nacimiento -->
+      <div>
+        <label for="fechaNacimiento" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+        <div class="mt-1">
+          <input id="fechaNacimiento" th:field="*{fechaNacimiento}" type="date" required
+                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                 th:classappend="${#fields.hasErrors('fechaNacimiento') ? 'border-red-500' : ''}">
+        </div>
+        <p th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}" class="text-red-500 text-xs italic mt-1"></p>
+      </div>
+
+      <!-- Género -->
+      <div>
+        <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>
+        <div class="mt-1">
+          <select id="genero" th:field="*{genero}" required
+                  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  th:classappend="${#fields.hasErrors('genero') ? 'border-red-500' : ''}">
+            <option value="" disabled>Selecciona tu género</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+        <p th:if="${#fields.hasErrors('genero')}" th:errors="*{genero}" class="text-red-500 text-xs italic mt-1"></p>
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+        <div class="mt-1">
+          <input id="telefono" th:field="*{telefono}" type="text" autocomplete="tel" required maxlength="10"
+                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                 th:classappend="${#fields.hasErrors('telefono') ? 'border-red-500' : ''}">
+        </div>
+        <p th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="text-red-500 text-xs italic mt-1"></p>
       </div>
 
       <div>
@@ -63,7 +116,7 @@
     </form>
 
     <div class="mt-8 text-center text-sm text-gray-600">
-      ¿Ya tienes una cuenta de cliente? <a th:href="@{/inicioCliente}" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia sesión aquí</a>
+      ¿Ya tienes una cuenta de cliente? <a th:href="@{/inicioClientes}" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia sesión aquí</a>
     </div>
   </div>
 </main>

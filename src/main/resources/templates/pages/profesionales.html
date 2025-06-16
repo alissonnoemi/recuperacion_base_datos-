@@ -1,30 +1,67 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="@{/css/salonesBelleza.css}">
-    <title>Onboarding Negocios</title>
-    <style>
-        .contenedor-fondo {
-            min-height: 99vh;
-            min-width: 99vw;
-            background-image: url('/imagenes/img.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            flex-direction: column;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Nuevo Profesional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gradient-to-br from-blue-100 to-blue-300 min-h-screen flex flex-col">
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-<div class="contenedor-fondo">
-
+<div class="flex flex-1 items-center justify-center">
+    <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-lg">
+        <h2 class="text-3xl font-bold text-blue-700 mb-8 text-center">Registrar Nuevo Profesional</h2>
+        <form th:action="@{/guardarProfesionales}" th:object="${profesional}" method="post" class="space-y-5">
+            <div th:if="${#fields.hasErrors('global')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span th:each="err : ${#fields.errors('global')}" th:text="${err}">Error</span>
+            </div>
+            <div th:if="${mensajeTipo == 'error'}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span th:text="${mensajeCuerpo}"></span>
+            </div>
+            <div>
+                <label for="nombreCompleto" class="block text-gray-700 text-sm font-semibold mb-2">Nombre Completo:</label>
+                <input type="text" id="nombreCompleto" th:field="*{nombreCompleto}" class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                       th:classappend="${#fields.hasErrors('nombreCompleto') ? 'border-red-500' : ''}">
+                <p th:if="${#fields.hasErrors('nombreCompleto')}" th:errors="*{nombreCompleto}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+            <div>
+                <label for="especialidad" class="block text-gray-700 text-sm font-semibold mb-2">Especialidad:</label>
+                <input type="text" id="especialidad" th:field="*{especialidad}" class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                       th:classappend="${#fields.hasErrors('especialidad') ? 'border-red-500' : ''}">
+                <p th:if="${#fields.hasErrors('especialidad')}" th:errors="*{especialidad}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+            <div>
+                <label for="telefono" class="block text-gray-700 text-sm font-semibold mb-2">Teléfono:</label>
+                <input type="text" id="telefono" th:field="*{telefono}" class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                       th:classappend="${#fields.hasErrors('telefono') ? 'border-red-500' : ''}">
+                <p th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+            <div>
+                <label for="email" class="block text-gray-700 text-sm font-semibold mb-2">Email:</label>
+                <input type="email" id="email" th:field="*{email}" class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                       th:classappend="${#fields.hasErrors('email') ? 'border-red-500' : ''}">
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+            <div>
+                <label for="negocio" class="block text-gray-700 text-sm font-semibold mb-2">Negocio Asociado:</label>
+                <select id="negocio" th:field="*{negocio.idNegocio}" class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                        th:classappend="${#fields.hasErrors('negocio.idNegocio') ? 'border-red-500' : ''}">
+                    <option value="">-- Seleccione un Negocio --</option>
+                    <option th:each="neg : ${negocios}" th:value="${neg.idNegocio}" th:text="${neg.nombreCompleto}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('negocio.idNegocio')}" th:errors="*{negocio.idNegocio}" class="text-red-500 text-xs italic mt-1"></p>
+                <p th:if="${#fields.hasErrors('negocio')}" th:errors="*{negocio}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow transition focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    Guardar Profesional
+                </button>
+                <a th:href="@{/listaProfesionales}" class="font-bold text-sm text-gray-600 hover:text-blue-700 transition">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

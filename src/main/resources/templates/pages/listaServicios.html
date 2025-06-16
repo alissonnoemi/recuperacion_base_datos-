@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Servicios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Listado de Servicios</h2>
+
+    <div th:if="${mensajeTipo}" class="mb-4"
+         th:classappend="${mensajeTipo == 'success' ? 'bg-green-200 text-green-800 border-green-600' : 'bg-red-200 text-red-800 border-red-600'}"
+         role="alert">
+        <div class="border rounded-md px-4 py-3">
+            <strong class="font-bold" th:text="${mensajeTipo == 'success' ? 'Éxito!' : 'Error!'}"></strong>
+            <span class="block sm:inline" th:text="${mensajeCuerpo}"></span>
+        </div>
+    </div>
+
+    <a th:href="@{/servicios/nuevo}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">
+        Registrar Nuevo Servicio
+    </a>
+
+    <div th:if="${servicios.isEmpty()}" class="bg-gray-200 text-gray-700 p-3 rounded-md mb-4">
+        No hay servicios registrados.
+    </div>
+
+    <div th:unless="${servicios.isEmpty()}" class="overflow-x-auto">
+        <table class="min-w-full bg-white shadow-md rounded-md">
+            <thead class="bg-gray-800 text-white">
+            <tr>
+                <th class="py-3 px-4 text-left">ID</th>
+                <th class="py-3 px-4 text-left">Nombre</th>
+                <th class="py-3 px-4 text-left">Precio</th>
+                <th class="py-3 px-4 text-left">Duración (Minutos)</th>
+                <th class="py-3 px-4 text-left">Negocio</th>
+                <th class="py-3 px-4 text-left">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="servicio : ${servicios}" class="hover:bg-gray-100">
+                <td class="py-3 px-4" th:text="${servicio.idServicio}"></td>
+                <td class="py-3 px-4" th:text="${servicio.nombre}"></td>
+                <td class="py-3 px-4" th:text="${servicio.precio}"></td>
+                <td class="py-3 px-4" th:text="${servicio.duracionMinutos}"></td>
+                <td class="py-3 px-4" th:text="${servicio.negocio?.nombreCompleto}"></td> <td class="py-3 px-4 whitespace-nowrap">
+                <a th:href="@{/editarServicio/{id}(id=${servicio.idServicio})}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-xs mr-2">
+                    Editar
+                </a>
+                <form th:action="@{/eliminarServicio/{id}(id=${servicio.idServicio})}" method="post" class="inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este servicio?');">
+                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <a th:href="@{/}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Volver al Inicio</a>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

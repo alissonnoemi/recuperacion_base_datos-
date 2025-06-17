@@ -36,7 +36,7 @@ public class CitasController {
     @GetMapping("/agendar")
     public String mostrarFormularioAgendar(Model model) {
         Citas cita = new Citas();
-        cita.setDuracionServicioMinutos(0L); // Corregido a Long
+        cita.setDuracionServicioMinutos(0L);
         model.addAttribute("cita", cita);
         model.addAttribute("clientes", clienteServicio.obtenerTodosLosClientes());
         model.addAttribute("profesionales", profesionalServicio.obtenerTodosLosProfesionales());
@@ -56,10 +56,6 @@ public class CitasController {
             return "pages/cita";
         }
         try {
-            Servicio selectedServicio = servicioServicio.obtenerServicioPorId(cita.getServicio().getIdServicio())
-                    .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado."));
-            cita.setDuracionServicioMinutos(selectedServicio.getDuracionMinutos()); // Corregido
-
             citasServicio.agendarNuevaCita(cita);
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Cita agendada exitosamente!");
@@ -105,15 +101,11 @@ public class CitasController {
         if (result.hasErrors()) {
             model.addAttribute("clientes", clienteServicio.obtenerTodosLosClientes());
             model.addAttribute("profesionales", profesionalServicio.obtenerTodosLosProfesionales());
-            model.addAttribute("servicios", servicioServicio.obtenerTodosLosServicios());
+            model.addAttribute("servicios", servicioServicio.obtenerTodosLosServicios()); // Corregido el typo aquí
             return "pages/cita";
         }
         try {
             cita.setIdCita(id);
-            Servicio selectedServicio = servicioServicio.obtenerServicioPorId(cita.getServicio().getIdServicio())
-                    .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado."));
-            cita.setDuracionServicioMinutos(selectedServicio.getDuracionMinutos()); // Corregido
-
             citasServicio.actualizarCita(cita.getIdCita(), cita);
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Cita actualizada exitosamente!");
@@ -123,7 +115,7 @@ public class CitasController {
             redirectAttributes.addFlashAttribute("mensajeCuerpo", e.getMessage());
             model.addAttribute("clientes", clienteServicio.obtenerTodosLosClientes());
             model.addAttribute("profesionales", profesionalServicio.obtenerTodosLosProfesionales());
-            model.addAttribute("servicios", servicioServicio.obtenerTodosLosServicios());
+            model.addAttribute("servicios", servicioServicio.obtenerTodosLosServicios()); // Corregido el typo aquí
             return "pages/cita";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");

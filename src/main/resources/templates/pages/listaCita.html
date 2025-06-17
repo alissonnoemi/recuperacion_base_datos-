@@ -157,16 +157,20 @@
         <td class="px-6 py-4" th:text="${cita.profesional.nombreCompleto}"></td>
         <td class="px-6 py-4" th:text="${cita.fechaHoraInicio}"></td>
         <td class="px-6 py-4 text-center">
-          <span th:if="${cita.estadoCita == 'PENDIENTE'}" class="text-yellow-600 font-semibold">Pendiente</span>
-          <span th:if="${cita.estadoCita == 'CONFIRMADA'}" class="text-green-600 font-semibold">Confirmada</span>
-            <span th:if="${cita.estadoCita == 'CANCELADA'}" class="text-red-600 font-semibold">Cancelada</span>
+          <span th:if="${cita.estadoCita.name().toUpperCase() == 'PENDIENTE'}" class="text-yellow-600 font-semibold">Pendiente</span>
+          <span th:if="${cita.estadoCita.name().toUpperCase() == 'CONFIRMADA'}" class="text-green-600 font-semibold">Confirmada</span>
+          <span th:if="${cita.estadoCita.name().toUpperCase() == 'CANCELADA'}" class="text-red-600 font-semibold">Cancelada</span>
+            <span th:if="${cita.estadoCita.name().toUpperCase() == 'COMPLETADA'}" class="text-blue-600 font-semibold">COMPLETADA</span>
+
         </td>
         <td class="px-6 py-4" th:text="${cita.fechaHoraFin}"></td>
+
         <td class="px-6 py-4 text-center space-x-2">
           <a th:href="@{'/editarCita/' + ${cita.idCita}}" class="btn-actualizar inline-block px-4 py-1 text-base shadow hover:scale-105 transition">Actualizar</a>
           <a th:href="@{/eliminarCita/} + ${cita.idCita}" class="btn-eliminar inline-block px-4 py-1 text-base shadow hover:scale-105 transition">Eliminar</a>
         </td>
       </tr>
+
       </tbody>
     </table>
   </div>

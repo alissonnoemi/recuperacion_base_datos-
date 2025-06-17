@@ -1,10 +1,15 @@
 package com.itsqmet.controller;
-
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itsqmet.entity.Citas;
 import com.itsqmet.entity.Negocio;
 import com.itsqmet.entity.Profesional;
 import com.itsqmet.service.CitasServicio;
 import com.itsqmet.service.NegocioServicio;
 import com.itsqmet.service.ProfesionalServicio;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -27,7 +34,6 @@ public class ProfesionalesController { // Renombrado de ProfesionalesController 
     @Autowired
     private CitasServicio citasServicio;
 
-    // --- Listar todos los profesionales ---
     @GetMapping("/listaProfesionales")
     public String listarProfesionales(Model model) {
         model.addAttribute("profesionales", profesionalServicio.obtenerTodosLosProfesionales());
@@ -144,5 +150,37 @@ public class ProfesionalesController { // Renombrado de ProfesionalesController 
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Profesional no encontrado.");
             return "redirect:/listaProfesionales";
         }
+    }
+
+    @GetMapping("/profesionalesPdf")
+    public void exportarPDF(HttpServletResponse response) throws IOException, DocumentException {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=historial_citas_profesionales.pdf");
+
+        List<Profesional> profesionales = profesionalServicio.obtenerTodosLosProfesionales();
+
+        com.itextpdf.text.Document document = new Document();
+        PdfWriter.getInstance(document, response.getOutputStream());
+
+        document.open();
+        document.add(new Paragraph("Historial de Citas de Profesionales"));
+        document.add(new Paragraph(" "));
+
+        for (Profesional profesional : profesionales) {
+            document.add(new Paragraph("Profesional: " + profesional.getNombreCompleto()));
+            if (profesional.getCitas() != null && !profesional.getCitas().isEmpty()) {
+                for (Citas cita : profesional.getCitas()) {
+                    document.add(new Paragraph(
+                            "  Fecha: " + cita.getFechaHoraInicio() +
+                                    " | Hora: " + cita.getFechaHoraInicio() +
+                                    " | Cliente: " + cita.getCliente().getNombreCompleto()
+                    ));
+                }
+            } else {
+                document.add(new Paragraph("  Sin citas registradas."));
+            }
+            document.add(new Paragraph(" "));
+        }
+        document.close();
     }
 }

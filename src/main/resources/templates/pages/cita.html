@@ -8,6 +8,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <title>Agendar Cita</title>
     <style>
+        /* Mantén tus estilos CSS aquí */
         .form-label {
             font-weight: 600;
             color: #374151;
@@ -82,7 +83,6 @@
 <body class="bg-gradient-to-br from-indigo-100 via-blue-50 to-white min-h-screen font-sans leading-normal tracking-normal">
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<!-- Mensajes flash -->
 <div th:if="${messageType}" th:classappend="${messageType == 'success' ? 'bg-green-600' : 'bg-red-600'}"
      class="flash-message fixed top-4 right-4 z-50 p-4 rounded-lg text-white font-bold shadow-lg flash-message-animation">
     <p th:text="${messageBody}"></p>
@@ -101,8 +101,7 @@
 </div>
 
 <div class="container mx-auto form-container mb-10 max-w-2xl fade-in">
-    <form th:action="@{/agendar}" method="post" th:object="${cita}" class="space-y-6">
-        <!-- Campo oculto para edición -->
+    <form th:action="${cita.idCita != null ? '/editarCita/' + cita.idCita : '/agendar'}" method="post" th:object="${cita}" class="space-y-6">
         <input type="hidden" th:field="*{idCita}" />
 
         <div class="form-group">
@@ -121,23 +120,25 @@
                 <option th:each="ser : ${servicios}"
                         th:value="${ser.idServicio}"
                         th:text="${ser.nombre}"
-                        th:attr="data-duracion=${ser.duracionMinutos},data-negocio=${ser.negocio != null ? ser.negocio.nombreNegocio : ''}">
-                </option>
+                        th:attr="data-duracion=${ser.duracionMinutos},data-negocio=${ser.negocio != null ? ser.negocio.nombreNegocio : ''}"
+                        th:selected="${cita.servicio != null and cita.servicio.idServicio == ser.idServicio}"> </option>
             </select>
             <span th:if="${#fields.hasErrors('servicio')}" th:errors="*{servicio}" class="form-error"></span>
         </div>
 
         <div class="form-group">
             <label for="duracionServicioMinutos" class="form-label">Duración (minutos):</label>
-            <input type="number" id="duracionServicioMinutos" th:field="*{duracionServicioMinutos}" min="1" class="form-input" readonly />
+            <input type="number" id="duracionServicioMinutos" th:field="*{duracionServicioMinutos}" min="1" class="form-input" />
             <span th:if="${#fields.hasErrors('duracionServicioMinutos')}" th:errors="*{duracionServicioMinutos}" class="form-error"></span>
         </div>
-
         <div class="form-group">
             <label for="profesional" class="form-label">Profesional:</label>
             <select id="profesional" th:field="*{profesional.idProfesional}" class="form-select">
                 <option value="">-- Selecciona un profesional --</option>
-                <option th:each="pro : ${profesionales}" th:value="${pro.idProfesional}" th:text="${pro.nombreCompleto}"></option>
+                <option th:each="pro : ${profesionales}"
+                        th:value="${pro.idProfesional}"
+                        th:text="${pro.nombreCompleto}"
+                        th:selected="${cita.profesional != null and cita.profesional.idProfesional == pro.idProfesional}"></option>
             </select>
             <span th:if="${#fields.hasErrors('profesional')}" th:errors="*{profesional}" class="form-error"></span>
         </div>
@@ -158,26 +159,47 @@
             <label for="estadoCita" class="form-label">Estado de la cita:</label>
             <select id="estadoCita" th:field="*{estadoCita}" class="form-select">
                 <option value="">-- Selecciona un estado --</option>
-                <option th:each="estado : ${T(com.itsqmet.entity.Citas.EstadoCita).values()}" th:value="${estado}" th:text="${estado}"></option>
+                <option th:each="estado : ${T(com.itsqmet.entity.Citas.EstadoCita).values()}"
+                        th:value="${estado}"
+                        th:text="${estado}"
+                        th:selected="${cita.estadoCita != null and cita.estadoCita == estado}"></option>
             </select>
             <span th:if="${#fields.hasErrors('estadoCita')}" th:errors="*{estadoCita}" class="form-error"></span>
         </div>
 
         <div class="text-center mt-8">
-            <button type="submit" class="form-btn">Agendar Cita</button>
+            <button type="submit" class="form-btn" th:text="${cita.idCita != null ? 'Actualizar Cita' : 'Agendar Cita'}"></button>
         </div>
     </form>
 </div>
 
 <script>
+    // Esta función se encarga de rellenar la duración del servicio
     function actualizarCamposServicio() {
-        var select = document.getElementById('servicio');
-        var selected = select.options[select.selectedIndex];
-        document.getElementById('duracionServicioMinutos').value = selected.getAttribute('data-duracion') || '';
-        document.getElementById('nombreNegocio').value = selected.getAttribute('data-negocio') || '';
+        var selectServicio = document.getElementById('servicio');
+        var inputDuracion = document.getElementById('duracionServicioMinutos');
+        // var inputNombreNegocio = document.getElementById('nombreNegocio'); // Si mantienes este campo
+
+        if (selectServicio.selectedIndex > 0) { // Si se ha seleccionado un servicio (no la opción "-- Selecciona...")
+            var selectedOption = selectServicio.options[selectServicio.selectedIndex];
+            inputDuracion.value = selectedOption.getAttribute('data-duracion') || '';
+            // if (inputNombreNegocio) { // Si el campo existe
+            //     inputNombreNegocio.value = selectedOption.getAttribute('data-negocio') || '';
+            // }
+        } else {
+            // Si no hay servicio seleccionado, limpia los campos
+            inputDuracion.value = '';
+            // if (inputNombreNegocio) {
+            //     inputNombreNegocio.value = '';
+            // }
+        }
     }
-    window.onload = actualizarCamposServicio;
+
     document.addEventListener('DOMContentLoaded', function() {
+        // Ejecutar al cargar la página para inicializar los campos (importante para edición)
+        actualizarCamposServicio();
+
+        // Eliminar mensajes flash después de la animación
         const flashMessages = document.querySelectorAll('.flash-message');
         flashMessages.forEach(msg => {
             msg.addEventListener('animationend', () => {
@@ -185,14 +207,11 @@
             });
         });
     });
-    document.addEventListener('DOMContentLoaded', function() {
-        const flashMessages = document.querySelectorAll('.flash-message');
-        flashMessages.forEach(msg => {
-            msg.addEventListener('animationend', () => {
-                msg.remove();
-            });
-        });
-    });
+
+    // Scripts de Flowbite y AOS si los utilizas
+    // <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+// <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+// <script> AOS.init(); </script>
 </script>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

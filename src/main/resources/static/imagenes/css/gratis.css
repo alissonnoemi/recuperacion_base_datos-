@@ -1,0 +1,94 @@
+
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #374151; /* Darker gray for better contrast */
+        }
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .gradient-background {
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe, #a5b4fc); /* Softer, more vibrant gradient */
+        }
+
+        .form-container {
+            border: 1px solid rgba(255, 255, 255, 0.6); /* Lighter border for a softer look */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Stronger, more diffused shadow */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            transform: translateY(-20px); /* Initial subtle lift */
+            animation: formEntrance 1s ease-out forwards;
+        }
+
+        @keyframes formEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-field {
+            border: 1px solid #d1d5db; /* Light gray border */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #6366f1; /* Indigo on focus */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); /* Soft indigo glow */
+            outline: none;
+        }
+        .input-field.border-red-500 {
+            border-color: #ef4444; /* Red for errors */
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+
+        .submit-button {
+            background-color: #4f46e5; /* Deeper blue for main button */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .submit-button:hover {
+            background-color: #4338ca; /* Even deeper blue on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .submit-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.4);
+        }
+
+        .cancel-link {
+            transition: color 0.3s ease;
+        }
+        .cancel-link:hover {
+            color: #4f46e5; /* Main blue color on hover */
+        }
+
+        .pricing-card {
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+        .pricing-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .pricing-card.recommended {
+            border: 3px solid #4f46e5; /* Stronger border for recommended */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transform: scale(1.02);
+        }
+        .pricing-card.recommended:hover {
+            transform: translateY(-10px) scale(1.03); /* More pronounced hover for recommended */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .pricing-button {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .pricing-button:hover {
+            transform: translateY(-1px);
+        }

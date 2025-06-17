@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -41,10 +42,12 @@ public class CitasServicio {
             throw new IllegalArgumentException("La fecha y hora de inicio de la cita es obligatoria.");
         }
 
+        // Si la duración no se especifica o es inválida, usa la del servicio
         if (nuevaCita.getDuracionServicioMinutos() == null || nuevaCita.getDuracionServicioMinutos() <= 0) {
             nuevaCita.setDuracionServicioMinutos(servicio.getDuracionMinutos());
         }
         nuevaCita.setFechaHoraFin(nuevaCita.getFechaHoraInicio().plusMinutes(nuevaCita.getDuracionServicioMinutos()));
+
         List<Citas> citasConflictivas = citasRepositorio.findConflictingAppointments(
                 profesional, nuevaCita.getFechaHoraInicio(), nuevaCita.getFechaHoraFin());
 
@@ -54,7 +57,7 @@ public class CitasServicio {
                     nuevaCita.getFechaHoraInicio().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")) + " - " +
                     nuevaCita.getFechaHoraFin().format(DateTimeFormatter.ofPattern("HH:mm")) + ").");
         }
-        if (nuevaCita.getEstadoCita() == null) { // Si el estado no se envía, se establece por defecto
+        if (nuevaCita.getEstadoCita() == null) {
             nuevaCita.setEstadoCita(Citas.EstadoCita.PENDIENTE);
         }
 
@@ -78,46 +81,62 @@ public class CitasServicio {
         if (citaActualizada.getFechaHoraInicio() != null) {
             citaExistente.setFechaHoraInicio(citaActualizada.getFechaHoraInicio());
         }
-        if (citaActualizada.getDuracionServicioMinutos() != null && citaActualizada.getDuracionServicioMinutos() > 0) {
-            citaExistente.setDuracionServicioMinutos(citaActualizada.getDuracionServicioMinutos());
-        } else if (citaExistente.getServicio() != null && citaExistente.getServicio().getDuracionMinutos() != null) {
-            // Recalcular duración si se cambia el servicio y no se especifica duración
-            citaExistente.setDuracionServicioMinutos(citaExistente.getServicio().getDuracionMinutos());
-        }
-        citaExistente.setFechaHoraFin(citaExistente.getFechaHoraInicio().plusMinutes(citaExistente.getDuracionServicioMinutos()));
 
-        if (citaActualizada.getEstadoCita() != null) {
-            citaExistente.setEstadoCita(citaActualizada.getEstadoCita());
-        }
-
-        // Actualizar relaciones si los IDs han cambiado
+        // Actualizar el Cliente si el ID ha cambiado
         if (citaActualizada.getCliente() != null && citaActualizada.getCliente().getId() != null &&
-                !citaExistente.getCliente().getId().equals(citaActualizada.getCliente().getId())) {
-            Cliente nuevoPaciente = pacienteRepositorio.findById(citaActualizada.getCliente().getId())
+                (citaExistente.getCliente() == null || !citaExistente.getCliente().getId().equals(citaActualizada.getCliente().getId()))) {
+            Cliente nuevoCliente = pacienteRepositorio.findById(citaActualizada.getCliente().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Nuevo Paciente no encontrado con ID: " + citaActualizada.getCliente().getId()));
-            citaExistente.setCliente(nuevoPaciente);
+            citaExistente.setCliente(nuevoCliente);
         }
 
-        if (citaActualizada.getServicio() != null && citaActualizada.getServicio().getIdServicio() != null &&
-                !citaExistente.getServicio().getIdServicio().equals(citaActualizada.getServicio().getIdServicio())) {
-            Servicio nuevoServicio = servicioRepositorio.findById(citaActualizada.getServicio().getIdServicio())
-                    .orElseThrow(() -> new IllegalArgumentException("Nuevo Servicio no encontrado con ID: " + citaActualizada.getServicio().getIdServicio()));
-            citaExistente.setServicio(nuevoServicio);
-            // Si el servicio cambia, recalcula la duración si no se especificó una nueva
-            if (citaActualizada.getDuracionServicioMinutos() == null || citaActualizada.getDuracionServicioMinutos() <= 0) {
-                citaExistente.setDuracionServicioMinutos(nuevoServicio.getDuracionMinutos());
-                citaExistente.setFechaHoraFin(citaExistente.getFechaHoraInicio().plusMinutes(citaExistente.getDuracionServicioMinutos()));
+        // Actualizar el Servicio y recalcular la duración si es necesario
+        Servicio servicioActualSeleccionado = citaExistente.getServicio(); // Por defecto, el servicio actual
+        if (citaActualizada.getServicio() != null && citaActualizada.getServicio().getIdServicio() != null) {
+            // Si el servicio en la cita actualizada es diferente al existente
+            if (citaExistente.getServicio() == null || !citaExistente.getServicio().getIdServicio().equals(citaActualizada.getServicio().getIdServicio())) {
+                Servicio nuevoServicio = servicioRepositorio.findById(citaActualizada.getServicio().getIdServicio())
+                        .orElseThrow(() -> new IllegalArgumentException("Nuevo Servicio no encontrado con ID: " + citaActualizada.getServicio().getIdServicio()));
+                citaExistente.setServicio(nuevoServicio);
+                servicioActualSeleccionado = nuevoServicio; // Ahora el servicio para la duración es el nuevo
             }
         }
 
+        // Determinar la duración final para citaExistente
+        if (citaActualizada.getDuracionServicioMinutos() != null && citaActualizada.getDuracionServicioMinutos() > 0) {
+            // Si el usuario envió una duración válida, la usamos
+            citaExistente.setDuracionServicioMinutos(citaActualizada.getDuracionServicioMinutos());
+        } else if (servicioActualSeleccionado != null && servicioActualSeleccionado.getDuracionMinutos() != null && servicioActualSeleccionado.getDuracionMinutos() > 0) {
+            // Si no se envió duración o es inválida, pero tenemos un servicio (nuevo o existente) con duración, la usamos
+            citaExistente.setDuracionServicioMinutos(servicioActualSeleccionado.getDuracionMinutos());
+        } else {
+            // Si no hay duración válida ni servicio con duración, puedes manejarlo aquí (ej. lanzar error, usar un valor por defecto)
+            // Por ahora, si no se puede determinar, se mantendrá el valor que ya tenía citaExistente o null.
+            // Para ser más seguro, podrías lanzar: throw new IllegalArgumentException("No se pudo determinar la duración del servicio.");
+        }
+
+
+        // Recalcular la fecha de fin con la duración final (ahora que la duración está establecida)
+        if (citaExistente.getFechaHoraInicio() != null && citaExistente.getDuracionServicioMinutos() != null) {
+            citaExistente.setFechaHoraFin(citaExistente.getFechaHoraInicio().plusMinutes(citaExistente.getDuracionServicioMinutos()));
+        }
+
+
+        // Actualizar el Profesional si el ID ha cambiado
         if (citaActualizada.getProfesional() != null && citaActualizada.getProfesional().getIdProfesional() != null &&
-                !citaExistente.getProfesional().getIdProfesional().equals(citaActualizada.getProfesional().getIdProfesional())) {
+                (citaExistente.getProfesional() == null || !citaExistente.getProfesional().getIdProfesional().equals(citaActualizada.getProfesional().getIdProfesional()))) {
             Profesional nuevoProfesional = profesionalRepositorio.findById(citaActualizada.getProfesional().getIdProfesional())
                     .orElseThrow(() -> new IllegalArgumentException("Nuevo Profesional no encontrado con ID: " + citaActualizada.getProfesional().getIdProfesional()));
             citaExistente.setProfesional(nuevoProfesional);
         }
 
-        // *** Lógica de validación de superposición para actualización ***
+        // Actualizar el Estado de la Cita
+        if (citaActualizada.getEstadoCita() != null) {
+            citaExistente.setEstadoCita(citaActualizada.getEstadoCita());
+        }
+
+
+        // Lógica de validación de superposición para actualización
         List<Citas> citasConflictivas = citasRepositorio.findConflictingAppointmentsExcludingSelf(
                 citaExistente.getProfesional(), citaExistente.getFechaHoraInicio(), citaExistente.getFechaHoraFin(), citaExistente.getIdCita());
 
@@ -127,8 +146,8 @@ public class CitasServicio {
                     citaExistente.getFechaHoraInicio().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")) + " - " +
                     citaExistente.getFechaHoraFin().format(DateTimeFormatter.ofPattern("HH:mm")) + ").");
         }
-        // *** Fin de la lógica de validación de superposición para actualización ***
 
+        // Finalmente, guardar la cita con todos los cambios
         return citasRepositorio.save(citaExistente);
     }
 

@@ -1,14 +1,36 @@
-body { font-family: 'Sora', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; display: flex; flex-direction: column; min-height: 100vh; }
-        main { flex: 1; }
-        .pricing-card-highlight {
-            border: 2px solid theme('colors.indigo.600');
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            transform: scale(1.02);
-            position: relative;
-            z-index: 10;
+/* Custom CSS para mejorar precios.html */
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #374151;
+        }
+        h1, h2, h3, .font-extrabold {
+            font-family: 'Poppins', sans-serif;
         }
         .pricing-toggle-active {
-            background-color: theme('colors.indigo.600');
+            background-color: #6366f1; /* Indigo-600 */
             color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+        .pricing-card-highlight {
+            border: 3px solid #8B5CF6; /* Purple-500 */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            transform: scale(1.02);
+            transition: all 0.3s ease-in-out;
+            position: relative; /* Para el badge */
+        }
+        .pricing-card-highlight:hover {
+            transform: scale(1.03) translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        .pricing-card-highlight .absolute {
+            transform: rotate(8deg); /* Ángulo del badge */
+            transition: transform 0.3s ease;
+        }
+        .pricing-card-highlight:hover .absolute {
+            transform: rotate(0deg); /* Se endereza al hacer hover */
+        }
+        /* Ajuste para iconos en la tabla */
+        .min-w-full td svg {
+            display: inline-block; /* Asegura que el SVG no rompa la línea */
+            vertical-align: middle; /* Alinea el SVG con el texto si hubiera */
         }

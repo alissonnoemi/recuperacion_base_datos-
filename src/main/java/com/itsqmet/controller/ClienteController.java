@@ -43,13 +43,15 @@ public class ClienteController {
                                    BindingResult result,
                                    RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
+
             return "pages/registroCliente";
         }
         try {
+
             clienteServicio.guardarCliente(cliente);
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Cliente registrado exitosamente! Ya puedes iniciar sesión.");
-            return "redirect:/inicioClientes"; // Redirección correcta para el REGISTRO
+            return "redirect:/inicioClientes";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", e.getMessage());
@@ -80,22 +82,24 @@ public class ClienteController {
                                     BindingResult result,
                                     RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
+
             return "pages/registroCliente";
         }
         try {
+
             cliente.setId(id);
-            clienteServicio.guardarCliente(cliente);
+            clienteServicio.guardarCliente(cliente); // El servicio detectará el ID y actualizará
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Cliente actualizado exitosamente!");
-            return "redirect:/listaClientes";
+            return "redirect:/listaClientes"; // Redirige a la lista de clientes después de una actualización exitosa
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", e.getMessage());
-            return "pages/registroCliente";
+            return "pages/registroCliente"; // Vuelve al formulario con el mensaje de error
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al actualizar el cliente: " + e.getMessage());
-            return "pages/registroCliente";
+            return "pages/registroCliente"; // Vuelve al formulario con el mensaje de error
         }
     }
 
@@ -125,9 +129,9 @@ public class ClienteController {
     public String procesarLogin(@ModelAttribute Cliente cliente, Model model) {
         boolean autenticado = clienteServicio.validarCredenciales(cliente.getEmail(), cliente.getPassword());
         if (autenticado) {
-
             Cliente clienteAutenticado = clienteServicio.obtenerClientePorEmail(cliente.getEmail()).orElse(null);
             if (clienteAutenticado != null) {
+
                 Citas nuevaCita = new Citas();
                 nuevaCita.setCliente(clienteAutenticado);
 
@@ -135,7 +139,6 @@ public class ClienteController {
                 nuevaCita.setProfesional(new Profesional());
 
                 model.addAttribute("cita", nuevaCita);
-
                 model.addAttribute("clientes", clienteServicio.obtenerTodosLosClientes());
                 model.addAttribute("profesionales", profesionalServicio.obtenerTodosLosProfesionales());
                 model.addAttribute("servicios", servicioServicio.obtenerTodosLosServicios());

@@ -32,7 +32,7 @@
                 <td class="py-3 px-4" th:text="${cita.idCita}"></td>
                 <td class="py-3 px-4" th:text="${#temporals.format(cita.fechaHoraInicio, 'dd-MM-yyyy HH:mm')}"></td>
                 <td class="py-3 px-4" th:text="${cita.estadoCita}"></td>
-                <td class="py-3 px-4" th:text="${cita.paciente.nombreCompleto}"></td>
+                <td class="py-3 px-4" th:text="${cita.cliente.nombreCompleto}"></td>
                 <td class="py-3 px-4" th:text="${cita.servicio.nombre}"></td>
                 <td class="py-3 px-4" th:text="${cita.duracionServicioMinutos}"></td>
             </tr>
@@ -40,7 +40,8 @@
             </tbody>
         </table>
     </div>
-    <a th:href="@{/profesionales/listado}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Volver al Listado de Profesionales</a>
+    <a th:href="@{/profesionalesPdf}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Historial</a>
+    <a th:href="@{/listaProfesionales}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Volver al Listado de Profesionales</a>
 </div>
 </body>
 <div th:replace="~{fragments/footer :: footer}"></div>

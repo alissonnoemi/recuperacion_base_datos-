@@ -25,93 +25,96 @@ public class ClienteController {
     private ProfesionalServicio profesionalServicio;
     @Autowired
     private ServicioServicio servicioServicio;
-    // Listar todos los pacientes
-    @GetMapping("/lista")
+
+    @GetMapping("/listaClientes")
     public String listaClientes(Model model) {
         model.addAttribute("clientes", clienteServicio.obtenerTodosLosClientes());
         return "pages/listaClientes";
     }
-    // Mostrar formulario para crear un nuevo paciente
+
     @GetMapping("/registroCliente")
-    public String mostrarFormularioNuevoPaciente(Model model) {
+    public String mostrarFormularioRegistroCliente(Model model) {
         model.addAttribute("cliente", new Cliente());
         return "pages/registroCliente";
     }
 
-    // Procesa el registro
     @PostMapping("/registroCliente")
-    public String guardarPaciente(@Valid @ModelAttribute("cliente") Cliente cliente, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String registrarCliente(@Valid @ModelAttribute("cliente") Cliente cliente,
+                                   BindingResult result,
+                                   RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            return "pages/inicioClientes";
+            return "pages/registroCliente";
         }
         try {
-            clienteServicio.guardarPaciente(cliente);
+            clienteServicio.guardarCliente(cliente);
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
-            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Paciente guardado exitosamente!");
-            return "redirect:/lista";
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Cliente registrado exitosamente! Ya puedes iniciar sesión.");
+            return "redirect:/inicioClientes"; // Redirección correcta para el REGISTRO
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", e.getMessage());
-            return "pages/crearPaciente";
+            return "pages/registroCliente";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
-            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al guardar el paciente: " + e.getMessage());
-            return "pages/crearPaciente";
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al registrar el cliente: " + e.getMessage());
+            return "pages/registroCliente";
         }
     }
 
-    // Mostrar formulario para editar un paciente
     @GetMapping("/editarCliente/{id}")
-    public String mostrarFormularioEditarPaciente(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Cliente> pacienteOptional = clienteServicio.obtenerClientePorId(id);
-        if (pacienteOptional.isPresent()) {
-            model.addAttribute("cliente", pacienteOptional.get());
+    public String mostrarFormularioEditarCliente(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+        Optional<Cliente> clienteOptional = clienteServicio.obtenerClientePorId(id);
+        if (clienteOptional.isPresent()) {
+            model.addAttribute("cliente", clienteOptional.get());
             return "pages/registroCliente";
         } else {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
-            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Paciente no encontrado para editar.");
-            return "redirect:/lista";
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Cliente no encontrado para editar.");
+            return "redirect:/listaClientes";
         }
     }
 
-    // Procesar la edición de un paciente
-    @PostMapping("/actualizarCliente/{id}")
-    public String actualizarCliente(@PathVariable("id") Long id, @Valid @ModelAttribute("cliente") Cliente cliente, BindingResult result, RedirectAttributes redirectAttributes) {
+    @PostMapping("/editarCliente/{id}")
+    public String actualizarCliente(@PathVariable("id") Long id,
+                                    @Valid @ModelAttribute("cliente") Cliente cliente,
+                                    BindingResult result,
+                                    RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "pages/registroCliente";
         }
         try {
-            clienteServicio.actualizarPaciente(id, cliente);
+            cliente.setId(id);
+            clienteServicio.guardarCliente(cliente);
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
-            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Paciente actualizado exitosamente!");
-            return "redirect:/lista";
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Cliente actualizado exitosamente!");
+            return "redirect:/listaClientes";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", e.getMessage());
-            return "pages/editarPaciente";
+            return "pages/registroCliente";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
-            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al actualizar el paciente: " + e.getMessage());
-            return "pages/editarPaciente";
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al actualizar el cliente: " + e.getMessage());
+            return "pages/registroCliente";
         }
     }
 
-    // Eliminar un paciente
     @PostMapping("/eliminarCliente/{id}")
-    public String eliminarPaciente(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String eliminarCliente(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
-            clienteServicio.eliminarPaciente(id);
+            clienteServicio.eliminarCliente(id);
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
-            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Paciente eliminado exitosamente!");
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Cliente eliminado exitosamente!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
-            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al eliminar el paciente.");
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al eliminar el cliente.");
         }
-        return "redirect:/lista";
+        return "redirect:/listaClientes";
     }
+
     @GetMapping("/inicioClientes")
     public String mostrarLogin(Model model) {
         model.addAttribute("cliente", new Cliente());
@@ -122,20 +125,28 @@ public class ClienteController {
     public String procesarLogin(@ModelAttribute Cliente cliente, Model model) {
         boolean autenticado = clienteServicio.validarCredenciales(cliente.getEmail(), cliente.getPassword());
         if (autenticado) {
-            Citas nuevaCita = new Citas();
-            nuevaCita.setCliente(new Cliente());
-            nuevaCita.setServicio(new Servicio());
-            nuevaCita.setProfesional(new Profesional());
 
-            model.addAttribute("cita", nuevaCita);
-            model.addAttribute("clientes", clienteServicio.obtenerTodosLosClientes());
-            model.addAttribute("profesionales", profesionalServicio.obtenerTodosLosProfesionales());
-            model.addAttribute("servicios", servicioServicio.obtenerTodosLosServicios());
-            return "pages/cita";
+            Cliente clienteAutenticado = clienteServicio.obtenerClientePorEmail(cliente.getEmail()).orElse(null);
+            if (clienteAutenticado != null) {
+                Citas nuevaCita = new Citas();
+                nuevaCita.setCliente(clienteAutenticado);
+
+                nuevaCita.setServicio(new Servicio());
+                nuevaCita.setProfesional(new Profesional());
+
+                model.addAttribute("cita", nuevaCita);
+
+                model.addAttribute("clientes", clienteServicio.obtenerTodosLosClientes());
+                model.addAttribute("profesionales", profesionalServicio.obtenerTodosLosProfesionales());
+                model.addAttribute("servicios", servicioServicio.obtenerTodosLosServicios());
+                return "pages/cita";
+            } else {
+                model.addAttribute("mensajeError", "Error al obtener datos del cliente autenticado.");
+                return "pages/inicioClientes";
+            }
         } else {
-            model.addAttribute("mensajeError", "Usuario o contraseña incorrectos");
+            model.addAttribute("mensajeError", "Correo electrónico o contraseña incorrectos.");
             return "pages/inicioClientes";
         }
     }
-
 }

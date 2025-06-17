@@ -48,7 +48,7 @@
                 <td class="py-3 px-4" th:text="${profesional.especialidad}"></td>
                 <td class="py-3 px-4" th:text="${profesional.telefono}"></td>
                 <td class="py-3 px-4" th:text="${profesional.email}"></td>
-                <td class="py-3 px-4" th:text="${profesional.negocio?.nombreCompleto}"></td> <td class="py-3 px-4 whitespace-nowrap">
+                <td class="py-3 px-4" th:text="${profesional.negocio?.nombreNegocio}"></td> <td class="py-3 px-4 whitespace-nowrap">
                 <a th:href="@{/editarProfesional/{id}(id=${profesional.idProfesional})}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-xs mr-2">
                     Editar
                 </a>

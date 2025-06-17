@@ -24,42 +24,49 @@ public class ServicioController {
     @Autowired
     private NegocioServicio negocioServicio;
 
-    // Listar todos los servicios
     @GetMapping("/listaServicios")
     public String listarServicios(Model model) {
         model.addAttribute("servicios", servicioServicio.obtenerTodosLosServicios());
         return "pages/listaServicios";
     }
 
-    // Mostrar formulario para crear un nuevo servicio
-    @GetMapping("/registrarServicios")
+    @GetMapping("/crearServicio")
     public String mostrarFormularioNuevoServicio(Model model) {
         Servicio nuevoServicio = new Servicio();
-        nuevoServicio.setNegocio(new Negocio());
+        if (nuevoServicio.getNegocio() == null) {
+            nuevoServicio.setNegocio(new Negocio());
+        }
         model.addAttribute("servicio", nuevoServicio);
         model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
         return "pages/registrarServicios";
     }
 
-    // Procesar el formulario de creación de servicio
-    @PostMapping("/guardarServicio")
-    public String guardarServicio(@Valid @ModelAttribute("servicio") Servicio servicio, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
+    @PostMapping("/crearServicio")
+    public String crearServicio(@Valid @ModelAttribute("servicio") Servicio servicio, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
+            model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
+            return "pages/registrarServicios"; // Regresa al formulario con los errores
+        }
+        try {
+            servicioServicio.guardarServicio(servicio); // Asumiendo que este método guarda si ID es null
+            redirectAttributes.addFlashAttribute("mensajeTipo", "success");
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Servicio creado exitosamente!");
+            return "redirect:/listaServicios";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "error");
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al crear el servicio: " + e.getMessage());
             model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
             return "pages/registrarServicios";
         }
-        servicioServicio.guardarServicio(servicio);
-        return "redirect:/listaServicios";
     }
 
-    // Mostrar formulario para editar un servicio
     @GetMapping("/editarServicio/{id}")
     public String mostrarFormularioEditarServicio(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Servicio> servicioOptional = servicioServicio.obtenerServicioPorId(id);
         if (servicioOptional.isPresent()) {
             model.addAttribute("servicio", servicioOptional.get());
             model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
-            return "pages/registrarServicios";
+            return "pages/registrarServicios"; // Reutiliza la plantilla para edición
         } else {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Servicio no encontrado para editar.");
@@ -67,10 +74,43 @@ public class ServicioController {
         }
     }
 
-    // Eliminar un servicio
+    // --- Procesar el formulario de ACTUALIZACIÓN de servicio ---
+    // ESTE ES EL NUEVO @PostMapping que necesitas para manejar las actualizaciones.
+    @PostMapping("/editarServicio/{id}") // Este endpoint debe coincidir con th:action cuando el ID NO es nulo
+    public String actualizarServicio(@PathVariable("id") Long id,
+                                     @Valid @ModelAttribute("servicio") Servicio servicio,
+                                     BindingResult result,
+                                     RedirectAttributes redirectAttributes,
+                                     Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
+            return "pages/registrarServicios";
+        }
+        try {
+
+            servicio.setIdServicio(id);
+            servicioServicio.guardarServicio(servicio); // Este método debe manejar la actualización
+            redirectAttributes.addFlashAttribute("mensajeTipo", "success");
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Servicio actualizado exitosamente!");
+            return "redirect:/listaServicios";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "error");
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al actualizar el servicio: " + e.getMessage());
+            model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
+            return "pages/registrarServicios";
+        }
+    }
+
     @PostMapping("/eliminarServicio/{id}")
     public String eliminarServicio(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        servicioServicio.eliminarServicio(id);
+        try {
+            servicioServicio.eliminarServicio(id);
+            redirectAttributes.addFlashAttribute("mensajeTipo", "success");
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Servicio eliminado exitosamente!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "error");
+            redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al eliminar el servicio: " + e.getMessage());
+        }
         return "redirect:/listaServicios";
     }
 }

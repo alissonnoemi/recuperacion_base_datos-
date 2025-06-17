@@ -116,11 +116,21 @@
 
         <div class="form-group">
             <label for="servicio" class="form-label">Servicio:</label>
-            <select id="servicio" th:field="*{servicio.idServicio}" class="form-select">
+            <select id="servicio" th:field="*{servicio.idServicio}" class="form-select" onchange="actualizarCamposServicio()">
                 <option value="">-- Selecciona un servicio --</option>
-                <option th:each="ser : ${servicios}" th:value="${ser.idServicio}" th:text="${ser.nombre}"></option>
+                <option th:each="ser : ${servicios}"
+                        th:value="${ser.idServicio}"
+                        th:text="${ser.nombre}"
+                        th:attr="data-duracion=${ser.duracionMinutos},data-negocio=${ser.negocio != null ? ser.negocio.nombreNegocio : ''}">
+                </option>
             </select>
             <span th:if="${#fields.hasErrors('servicio')}" th:errors="*{servicio}" class="form-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="duracionServicioMinutos" class="form-label">Duración (minutos):</label>
+            <input type="number" id="duracionServicioMinutos" th:field="*{duracionServicioMinutos}" min="1" class="form-input" readonly />
+            <span th:if="${#fields.hasErrors('duracionServicioMinutos')}" th:errors="*{duracionServicioMinutos}" class="form-error"></span>
         </div>
 
         <div class="form-group">
@@ -145,12 +155,6 @@
         </div>
 
         <div class="form-group">
-            <label for="duracionServicioMinutos" class="form-label">Duración (minutos):</label>
-            <input type="number" id="duracionServicioMinutos" th:field="*{duracionServicioMinutos}" min="1" class="form-input" />
-            <span th:if="${#fields.hasErrors('duracionServicioMinutos')}" th:errors="*{duracionServicioMinutos}" class="form-error"></span>
-        </div>
-
-        <div class="form-group">
             <label for="estadoCita" class="form-label">Estado de la cita:</label>
             <select id="estadoCita" th:field="*{estadoCita}" class="form-select">
                 <option value="">-- Selecciona un estado --</option>
@@ -166,6 +170,21 @@
 </div>
 
 <script>
+    function actualizarCamposServicio() {
+        var select = document.getElementById('servicio');
+        var selected = select.options[select.selectedIndex];
+        document.getElementById('duracionServicioMinutos').value = selected.getAttribute('data-duracion') || '';
+        document.getElementById('nombreNegocio').value = selected.getAttribute('data-negocio') || '';
+    }
+    window.onload = actualizarCamposServicio;
+    document.addEventListener('DOMContentLoaded', function() {
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach(msg => {
+            msg.addEventListener('animationend', () => {
+                msg.remove();
+            });
+        });
+    });
     document.addEventListener('DOMContentLoaded', function() {
         const flashMessages = document.querySelectorAll('.flash-message');
         flashMessages.forEach(msg => {

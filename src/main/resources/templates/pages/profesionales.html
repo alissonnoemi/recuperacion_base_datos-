@@ -10,8 +10,18 @@
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <div class="flex flex-1 items-center justify-center">
     <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-lg">
-        <h2 class="text-3xl font-bold text-blue-700 mb-8 text-center">Registrar Nuevo Profesional</h2>
-        <form th:action="@{/guardarProfesionales}" th:object="${profesional}" method="post" class="space-y-5">
+        <h2 class="text-3xl font-bold text-blue-700 mb-8 text-center"
+            th:text="${profesional.idProfesional == null ? 'Registrar Nuevo Profesional' : 'Editar Profesional'}">
+            Registrar Nuevo Profesional
+        </h2>
+
+        <form th:action="${profesional.idProfesional == null ? '/crearProfesional' : '/editarProfesional/' + profesional.idProfesional}"
+              th:object="${profesional}"
+              method="post"
+              class="space-y-5">
+
+            <input type="hidden" th:field="*{idProfesional}" />
+
             <div th:if="${#fields.hasErrors('global')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                 <span th:each="err : ${#fields.errors('global')}" th:text="${err}">Error</span>
             </div>
@@ -47,7 +57,7 @@
                 <select id="negocio" th:field="*{negocio.idNegocio}" class="shadow border rounded-lg w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                         th:classappend="${#fields.hasErrors('negocio.idNegocio') ? 'border-red-500' : ''}">
                     <option value="">-- Seleccione un Negocio --</option>
-                    <option th:each="neg : ${negocios}" th:value="${neg.idNegocio}" th:text="${neg.nombreCompleto}"></option>
+                    <option th:each="neg : ${negocios}" th:value="${neg.idNegocio}" th:text="${neg.nombreNegocio}"></option>
                 </select>
                 <p th:if="${#fields.hasErrors('negocio.idNegocio')}" th:errors="*{negocio.idNegocio}" class="text-red-500 text-xs italic mt-1"></p>
                 <p th:if="${#fields.hasErrors('negocio')}" th:errors="*{negocio}" class="text-red-500 text-xs italic mt-1"></p>

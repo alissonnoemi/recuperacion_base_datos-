@@ -29,6 +29,12 @@
       <div class="lg:order-2 animate__animated animate__fadeInRight">
         <h2 class="text-3xl font-extrabold text-gray-900 mb-6">Envíanos un Mensaje</h2>
         <form class="space-y-6" th:action="@{/enviarContacto}" method="post" th:object="${contacto}">
+          <div class="hidden">
+            <label for="id" class="block text-sm font-medium text-gray-700">ID</label>
+            <div class="mt-1">
+              <input id="id" name="id" type="number" autocomplete="id" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+          </div>
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
             <div class="mt-1">

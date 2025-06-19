@@ -3,6 +3,7 @@ package com.itsqmet.controller;
 import com.itsqmet.entity.Contacto;
 import com.itsqmet.repository.contactoRepositorio;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -12,7 +13,7 @@ public class ContactoController {
         this.contactoRepositorio = contactoRepositorio;
     }
     @PostMapping ("/enviarContacto")
-    public String enviarContacto(Contacto contacto) {
+    public String enviarContacto(@ModelAttribute  Contacto contacto) {
         contactoRepositorio.save(contacto);
         return "redirect:/agradecimiento";
     }

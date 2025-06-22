@@ -110,7 +110,7 @@
 <div class="container mx-auto main-card">
   <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
     <h1 class="main-title animate__animated animate__fadeInDown">Administración de Citas</h1>
-    <a th:href="@{/cita}" class="btn-nueva flex items-center gap-2 px-6 py-2 text-lg shadow hover:scale-105 transition">
+    <a th:href="@{/agendar}" class="btn-nueva flex items-center gap-2 px-6 py-2 text-lg shadow hover:scale-105 transition">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
       Nueva Cita
     </a>
@@ -160,7 +160,7 @@
           <span th:if="${cita.estadoCita.name().toUpperCase() == 'PENDIENTE'}" class="text-yellow-600 font-semibold">Pendiente</span>
           <span th:if="${cita.estadoCita.name().toUpperCase() == 'CONFIRMADA'}" class="text-green-600 font-semibold">Confirmada</span>
           <span th:if="${cita.estadoCita.name().toUpperCase() == 'CANCELADA'}" class="text-red-600 font-semibold">Cancelada</span>
-            <span th:if="${cita.estadoCita.name().toUpperCase() == 'COMPLETADA'}" class="text-blue-600 font-semibold">COMPLETADA</span>
+          <span th:if="${cita.estadoCita.name().toUpperCase() == 'COMPLETADA'}" class="text-blue-600 font-semibold">COMPLETADA</span>
 
         </td>
         <td class="px-6 py-4" th:text="${cita.fechaHoraFin}"></td>

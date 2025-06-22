@@ -21,9 +21,9 @@ public class Citas {
     @NotNull(message = "La fecha y hora de fin de la cita es obligatoria")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime fechaHoraFin;
-    @Min(value = 1, message = "La duración del servicio debe ser al menos 1 minuto")
-    @Max(value = 1440, message = "La duración del servicio no puede exceder 1440 minutos (24 horas)")
-    private Long duracionServicioMinutos;
+    @Min(value = 1, message = "La duración del servicio debe ser al menos 1 hora")
+    @Max(value = 24, message = "La duración del servicio no puede exceder 24 horas")
+    private Long duracionServicioHoras;
     @Column(name = "estado_cita", nullable = false)
     @Enumerated(EnumType.STRING)
     private EstadoCita estadoCita;
@@ -38,6 +38,17 @@ public class Citas {
     private Profesional profesional;
     public enum EstadoCita {
         PENDIENTE, CONFIRMADA, COMPLETADA, CANCELADA, REPROGRAMADA
+    }
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_negocio", nullable = false)
+    private Negocio negocio;
+
+    public Negocio getNegocio() {
+        return negocio;
+    }
+
+    public void setNegocio(Negocio negocio) {
+        this.negocio = negocio;
     }
 
     public Long getIdCita() {
@@ -64,12 +75,12 @@ public class Citas {
         this.fechaHoraFin = fechaHoraFin;
     }
 
-    public Long getDuracionServicioMinutos() {
-        return duracionServicioMinutos;
+    public Long getDuracionServicioHoras() {
+        return duracionServicioHoras;
     }
 
-    public void setDuracionServicioMinutos(Long duracionServicioMinutos) {
-        this.duracionServicioMinutos = duracionServicioMinutos;
+    public void setDuracionServicioHoras(Long duracionServicioHoras) {
+        this.duracionServicioHoras = duracionServicioHoras;
     }
 
     public EstadoCita getEstadoCita() {

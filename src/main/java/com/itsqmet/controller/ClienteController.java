@@ -125,31 +125,5 @@ public class ClienteController {
         return "pages/inicioClientes";
     }
 
-    @PostMapping("/login")
-    public String procesarLogin(@ModelAttribute Cliente cliente, Model model) {
-        boolean autenticado = clienteServicio.validarCredenciales(cliente.getEmail(), cliente.getPassword());
-        if (autenticado) {
-            Cliente clienteAutenticado = clienteServicio.obtenerClientePorEmail(cliente.getEmail()).orElse(null);
-            if (clienteAutenticado != null) {
 
-                Citas nuevaCita = new Citas();
-                nuevaCita.setCliente(clienteAutenticado);
-
-                nuevaCita.setServicio(new Servicio());
-                nuevaCita.setProfesional(new Profesional());
-
-                model.addAttribute("cita", nuevaCita);
-                model.addAttribute("clientes", clienteServicio.obtenerTodosLosClientes());
-                model.addAttribute("profesionales", profesionalServicio.obtenerTodosLosProfesionales());
-                model.addAttribute("servicios", servicioServicio.obtenerTodosLosServicios());
-                return "pages/cita";
-            } else {
-                model.addAttribute("mensajeError", "Error al obtener datos del cliente autenticado.");
-                return "pages/inicioClientes";
-            }
-        } else {
-            model.addAttribute("mensajeError", "Correo electrónico o contraseña incorrectos.");
-            return "pages/inicioClientes";
-        }
-    }
 }

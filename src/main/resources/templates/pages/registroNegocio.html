@@ -1,98 +1,576 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/salonesBelleza.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
-    <title>Registro Negocios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/gratis.css}">
+    <title>Registro - AgendaPro Connect</title>
+    <style>
+        /* Estilos para el botón de plan seleccionado */
+        .pricing-button.selected-plan {
+            background-color: #6366F1; /* Un color más oscuro de indigo */
+            color: white !important; /* Texto blanco */
+            border: 2px solid #4338CA; /* Borde más oscuro */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        /* Para el plan PRO seleccionado, ya que tiene un color de fondo diferente */
+        .pricing-card.recommended .pricing-button.selected-plan {
+            background-color: white !important;
+            color: #4338CA !important; /* Vuelve a usar el color principal de indigo */
+            border: 2px solid #4338CA;
+        }
+        /* Estilo para mensajes de validación de JS */
+        .validation-message {
+            font-size: 0.75rem; /* text-xs */
+            font-style: italic;
+            margin-top: 0.25rem; /* mt-1 */
+        }
+        .text-green-600 { color: #22c55e; } /* Tailwind green-600 */
+        .text-yellow-600 { color: #eab308; } /* Tailwind yellow-600 */
+        .text-red-600 { color: #dc2626; } /* Tailwind red-600 */
+    </style>
 </head>
-<body>
+<body class="font-sans antialiased">
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-xl animate__animated animate__fadeInDown">
-        <div class="text-center mb-8">
-            <img class="mx-auto h-16 w-auto" th:src="@{/imagenes/logo.png}" alt="AgendaPro Connect Logo">
-            <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
-                Crea tu Cuenta de Profesional
-            </h2>
-            <p class="mt-2 text-sm text-gray-600">
-                Gestiona la citas de tus clientes de manera eficaz.
-            </p>
+<div id="main-content-grid" class="min-h-screen flex items-center justify-center p-4 sm:p-8 gradient-background animate__animated animate__fadeIn overflow-auto max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start mx-auto">
+    <div id="formulario-gratis" class="form-container rounded-2xl p-6 sm:p-10 lg:p-12 text-center animate__animated animate__fadeInDown" data-aos="fade-right" data-aos-duration="1000">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+            Regístrate y elige tu plan
+        </h1>
+        <p class="text-gray-700 text-lg mb-8 max-w-md mx-auto">
+            Disfruta de 14 días de prueba gratuita. La facturación comenzará automáticamente después.
+        </p>
+
+        <div id="plan-selected-message" class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-6 text-sm" role="alert" style="display: none;">
+            <span class="font-bold">¡Excelente elección!</span> Estás a punto de comenzar con el Plan <span id="selected-plan-name" class="font-semibold capitalize"></span>.
         </div>
-        <form class="space-y-6" th:action="@{/registroNegocio}" method="post" th:object="${logNegocio}">
+
+        <div th:if="${mensajeTipo == 'error'}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6 text-sm" role="alert">
+            <strong class="font-bold">¡Error!</strong>
+            <span class="block sm:inline" th:text="${mensajeCuerpo}"></span>
+        </div>
+        <div th:if="${mensajeTipo == 'success'}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6 text-sm" role="alert">
+            <strong class="font-bold">¡Éxito!</strong>
+            <span class="block sm:inline" th:text="${mensajeCuerpo}"></span>
+        </div>
+
+        <form id="registerForm" th:action="@{/guardarNegocio}" th:object="${negocioDto}" method="post" class="text-left space-y-5">
+            <div th:if="${#fields.hasErrors('global')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm" role="alert">
+                <span th:each="err : ${#fields.errors('global')}" th:text="${err}"></span>
+            </div>
+
+            <input type="hidden" th:field="*{idNegocio}">
+
+            <input type="hidden" id="negocioPlan" th:field="*{plan}">
+            <p th:if="${#fields.hasErrors('plan')}" th:errors="*{plan}" class="text-red-500 text-xs italic mt-1"></p>
+
             <div>
-                <label for="nombreNegocio" class="block text-sm font-medium text-gray-700">Nombre Negocio:</label>
-                <div class="mt-1">
-                    <input id="nombreNegocio" th:field="*{nombreNegocio}" type="text"  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <label for="nombreCompleto" class="block text-gray-700 text-sm font-semibold mb-2">Tu Nombre Completo <span class="text-red-500">*</span></label>
+                <input type="text" id="nombreCompleto" th:field="*{nombreCompleto}" class="input-field w-full py-2 px-4 rounded-lg"
+                       th:classappend="${#fields.hasErrors('nombreCompleto') ? 'border-red-500' : ''}" placeholder="Ej: Juan Pérez">
+                <p th:if="${#fields.hasErrors('nombreCompleto')}" th:errors="*{nombreCompleto}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+
+            <div>
+                <label for="emailProfesional" class="block text-gray-700 text-sm font-semibold mb-2">Email Profesional <span class="text-red-500">*</span></label>
+                <input type="email" id="emailProfesional" th:field="*{emailProfesional}" class="input-field w-full py-2 px-4 rounded-lg"
+                       th:classappend="${#fields.hasErrors('emailProfesional') ? 'border-red-500' : ''}" placeholder="ejemplo@tunegocio.com">
+                <p th:if="${#fields.hasErrors('emailProfesional')}" th:errors="*{emailProfesional}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+
+            <div>
+                <label for="password" class="block text-gray-700 text-sm font-semibold mb-2">Contraseña <span class="text-red-500">*</span></label>
+                <input type="password" id="password" th:field="*{password}" class="input-field w-full py-2 px-4 rounded-lg"
+                       th:classappend="${#fields.hasErrors('password') ? 'border-red-500' : ''}" placeholder="Mínimo 8 caracteres">
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+
+            <div>
+                <label for="nombreNegocio" class="block text-gray-700 text-sm font-semibold mb-2">Nombre de tu Negocio <span class="text-red-500">*</span></label>
+                <input type="text" id="nombreNegocio" th:field="*{nombreNegocio}" class="input-field w-full py-2 px-4 rounded-lg"
+                       th:classappend="${#fields.hasErrors('nombreNegocio') ? 'border-red-500' : ''}" placeholder="Ej: Mi Salón de Belleza">
+                <p th:if="${#fields.hasErrors('nombreNegocio')}" th:errors="*{nombreNegocio}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+
+            <div>
+                <label for="tipoNegocio" class="block text-gray-700 text-sm font-semibold mb-2">Tipo de Negocio <span class="text-red-500">*</span></label>
+                <input type="text" id="tipoNegocio" th:field="*{tipoNegocio}" class="input-field w-full py-2 px-4 rounded-lg"
+                       th:classappend="${#fields.hasErrors('tipoNegocio') ? 'border-red-500' : ''}" placeholder="Ej: Salón de Belleza, Clínica Dental, Consultorio Médico">
+                <p th:if="${#fields.hasErrors('tipoNegocio')}" th:errors="*{tipoNegocio}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+
+            <div>
+                <label for="ruc" class="block text-gray-700 text-sm font-semibold mb-2">RUC del Negocio <span class="text-red-500">*</span></label>
+                <input type="text" id="ruc" th:field="*{ruc}" class="input-field w-full py-2 px-4 rounded-lg"
+                       th:classappend="${#fields.hasErrors('ruc') ? 'border-red-500' : ''}" placeholder="Ej: 1792134567001">
+                <p id="rucValidationMessageFrontend" class="validation-message" style="display: block;"></p>
+                <p th:if="${#fields.hasErrors('ruc')}" th:errors="*{ruc}" class="text-red-500 text-xs italic mt-1"></p>
+            </div>
+
+            <div>
+                <label for="telefono" class="block text-gray-700 text-sm font-semibold mb-2">Teléfono (Opcional)</label>
+                <input type="text" id="telefono" th:field="*{telefono}" class="input-field w-full py-2 px-4 rounded-lg" placeholder="Ej: +593 99 123 4567">
+            </div>
+
+            <div>
+                <label for="direccion" class="block text-gray-700 text-sm font-semibold mb-2">Dirección (Opcional)</label>
+                <input type="text" id="direccion" th:field="*{direccion}" class="input-field w-full py-2 px-4 rounded-lg" placeholder="Ej: Av. Principal 123, Ciudad">
+            </div>
+
+            <div id="payment-fields" class="space-y-5 border-t pt-5 mt-5 border-gray-200" style="display: none;">
+                <h3 class="text-lg font-semibold text-gray-800">Datos de Pago para Futura Facturación</h3>
+                <p class="text-sm text-gray-600 mb-4">Se te cobrará automáticamente después de tu prueba gratuita de 14 días.</p>
+                <div>
+                    <label for="cardNumber" class="block text-gray-700 text-sm font-semibold mb-2">Número de Tarjeta <span class="text-red-500">*</span></label>
+                    <input type="text" id="cardNumber" th:field="*{cardNumber}" class="input-field w-full py-2 px-4 rounded-lg"
+                           th:classappend="${#fields.hasErrors('cardNumber') ? 'border-red-500' : ''}" placeholder="XXXX XXXX XXXX XXXX">
+                    <p th:if="${#fields.hasErrors('cardNumber')}" th:errors="*{cardNumber}" class="text-red-500 text-xs italic mt-1"></p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="expiryDate" class="block text-gray-700 text-sm font-semibold mb-2">Fecha de Vencimiento <span class="text-red-500">*</span></label>
+                        <input type="text" id="expiryDate" th:field="*{expiryDate}" oninput="formatExpiryDate(this)" class="input-field w-full py-2 px-4 rounded-lg"
+                               th:classappend="${#fields.hasErrors('expiryDate') ? 'border-red-500' : ''}" placeholder="MM/AA">
+                        <p th:if="${#fields.hasErrors('expiryDate')}" th:errors="*{expiryDate}" class="text-red-500 text-xs italic mt-1"></p>
+                    </div>
+                    <div>
+                        <label for="cvv" class="block text-gray-700 text-sm font-semibold mb-2">CVV <span class="text-red-500">*</span></label>
+                        <input type="text" id="cvv" th:field="*{cvv}" class="input-field w-full py-2 px-4 rounded-lg"
+                               th:classappend="${#fields.hasErrors('cvv') ? 'border-red-500' : ''}" placeholder="123">
+                        <p th:if="${#fields.hasErrors('cvv')}" th:errors="*{cvv}" class="text-red-500 text-xs italic mt-1"></p>
+                    </div>
+                </div>
+                <div>
+                    <label for="billingAddress" class="block text-gray-700 text-sm font-semibold mb-2">Dirección de Facturación <span class="text-red-500">*</span></label>
+                    <input type="text" id="billingAddress" th:field="*{billingAddress}" class="input-field w-full py-2 px-4 rounded-lg"
+                           th:classappend="${#fields.hasErrors('billingAddress') ? 'border-red-500' : ''}" placeholder="Tu dirección de facturación">
+                    <p th:if="${#fields.hasErrors('billingAddress')}" th:errors="*{billingAddress}" class="text-red-500 text-xs italic mt-1"></p>
                 </div>
             </div>
-            <div>
-                <label for="tipoNegocio" class="block text-sm font-medium text-gray-700">Tipo Negocio</label>
-                <div class="mt-1">
-                    <select id="tipoNegocio" th:field="*{tipoNegocio}" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="" disabled selected>Selecciona un tipo</option>
-                        <option value="Peluquería">Peluquería</option>
-                        <option value="Barbería">Barbería</option>
-                        <option value="Spa">Spa</option>
-                        <option value="Manicura">Manicura</option>
-                        <option value="Pedicura">Pedicura</option>
-                        <option value="Estética">Estética</option>
-                        <option value="Cosmetología">Cosmetología</option>
-                        <option value="Tatuajes">Tatuajes</option>
-                        <option value="Masajes">Masajes</option>
-                        <option value="Otros">Otros</option>
-                    </select>
-                </div>
-            </div>
-            <div>
-                <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
-                <div class="mt-1">
-                    <input id="direccion" th:field="*{direccion}" type="text"  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-            </div>
-            <div>
-                <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
-                <div class="mt-1">
-                    <input id="telefono" th:field="*{telefono}" type="text"  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-            </div>
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                <div class="mt-1">
-                    <input id="email" th:field="*{email}" type="email" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                <div class="mt-1">
-                    <input id="password" th:field="*{password}" type="password"  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-            </div>
-            <div class="flex items-center">
-                <input id="termsAndPrivacyClient" name="termsAndPrivacy" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                <label for="termsAndPrivacyClient" class="ml-2 block text-sm text-gray-900">
-                    Acepto los <a href="/terminos-y-condiciones" class="font-medium text-indigo-600 hover:text-indigo-500">Términos y Condiciones</a> y la <a href="/politica-privacidad" class="font-medium text-indigo-600 hover:text-indigo-500">Política de Privacidad</a>.
+
+            <div class="flex items-center mt-6">
+                <input type="checkbox" id="termsAndPrivacy" name="termsAndPrivacy" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                <label for="termsAndPrivacy" class="ml-2 block text-sm text-gray-900">
+                    Acepto los <a href="#" class="text-indigo-600 hover:text-indigo-900 font-semibold" target="_blank">Términos y Condiciones</a> y la <a href="#" class="text-indigo-600 hover:text-indigo-900 font-semibold" target="_blank">Política de Privacidad</a> <span class="text-red-500">*</span>
                 </label>
             </div>
-            <div>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300">
-                    Crear Cuenta
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
+                <button type="submit" class="submit-button text-white font-bold py-3 px-6 rounded-full w-full sm:w-auto flex-grow text-lg shadow-lg bg-gray-300 text-black hover:bg-gray-400">
+                    Seleccionar Plan y Empezar Prueba
                 </button>
+                <a th:href="@{/negocios}" class="cancel-link inline-block align-baseline font-bold text-md text-gray-600 hover:text-indigo-700 transition duration-300">
+                    Volver a la Página Principal
+                </a>
             </div>
         </form>
+    </div>
 
-        <div class="mt-8 text-center text-sm text-gray-600">
-            ¿Ya tienes una cuenta de cliente? <a th:href="@{/inicioProfesionales}" class="font-medium text-indigo-600 hover:text-indigo-500">Inicia sesión aquí</a>
+    <div id="planes-section" class="flex flex-col justify-center space-y-8 lg:mt-10" data-aos="fade-left" data-aos-duration="1000">
+        <h2 class="text-3xl font-extrabold text-gray-900 text-center lg:text-left mb-4 animate__animated animate__fadeInRight">Elige tu Plan AgendaPro Connect</h2>
+        <p class="text-gray-700 text-lg mb-8 max-w-md mx-auto text-center lg:text-left">
+            Todos los planes incluyen 14 días de prueba gratuita.
+        </p>
+        <div class="space-y-6">
+            <div class="pricing-card bg-white rounded-2xl shadow-xl p-7 border border-gray-200 animate__animated animate__fadeInUp" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-xl font-semibold text-indigo-700 mb-3">Básico</h3>
+                <p class="text-4xl font-bold text-gray-900 mb-3">$39.99<span class="text-base font-normal text-gray-600">/mes</span></p>
+                <ul class="text-gray-700 mb-6 space-y-2 text-left">
+                    <li class="flex items-center"><svg class="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> 1 Usuario</li>
+                    <li class="flex items-center"><svg class="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Reservas Ilimitadas</li>
+                    <li class="flex items-center"><svg class="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Soporte Estándar</li>
+                </ul>
+                <a href="#formulario-gratis" data-plan="basico" class="pricing-button block w-full text-center py-3 rounded-xl bg-indigo-50 text-indigo-700 font-semibold hover:bg-indigo-100 transition shadow-md">Seleccionar Básico</a>
+            </div>
+
+            <div class="pricing-card recommended bg-indigo-700 rounded-2xl shadow-2xl p-7 border-2 border-indigo-800 animate__animated animate__fadeInUp" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-xl font-semibold text-white mb-3 flex items-center">
+                    Pro
+                    <span class="ml-3 px-3 py-1 bg-white text-indigo-700 rounded-full text-xs font-bold shadow-sm">RECOMENDADO</span>
+                </h3>
+                <p class="text-4xl font-bold text-white mb-3">$79.99<span class="text-base font-normal text-indigo-200">/mes</span></p>
+                <ul class="text-indigo-100 mb-6 space-y-2 text-left">
+                    <li class="flex items-center"><svg class="h-5 w-5 text-white mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Hasta 5 Usuarios</li>
+                    <li class="flex items-center"><svg class="h-5 w-5 text-white mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Reservas y Recordatorios Automáticos</li>
+                    <li class="flex items-center"><svg class="h-5 w-5 text-white mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Integraciones Avanzadas</li>
+                    <li class="flex items-center"><svg class="h-5 w-5 text-white mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Soporte Prioritario 24/7</li>
+                </ul>
+                <a href="#formulario-gratis" data-plan="pro" class="pricing-button block w-full text-center py-3 rounded-xl bg-white text-indigo-700 font-semibold hover:bg-indigo-50 transition shadow-lg">Seleccionar Pro</a>
+            </div>
+
+            <div class="pricing-card bg-white rounded-xl shadow-xl p-6 border border-gray-100 animate__animated animate__fadeInUp" data-aos="fade-up" data-aos-delay="300">
+                <h3 class="text-xl font-semibold text-indigo-700 mb-2">Empresarial</h3>
+                <p class="text-3xl font-bold text-gray-900 mb-2">A consultar</p>
+                <ul class="text-gray-600 mb-4 space-y-1 text-left">
+                    <li>✔ Usuarios ilimitados</li>
+                    <li>✔ Personalización total</li>
+                    <li>✔ Integraciones a medida</li>
+                    <li>✔ Soporte dedicado</li>
+                </ul>
+                <a href="#formulario-gratis" data-plan="empresarial" class="pricing-button block w-full text-center py-2 rounded-md bg-indigo-50 text-indigo-700 font-semibold hover:bg-indigo-100 transition">Contactar y Seleccionar</a>
+            </div>
         </div>
     </div>
-</main>
-
+</div>
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    // Función para formatear la fecha de vencimiento de la tarjeta (MM/AA)
+    function formatExpiryDate(input) {
+        let value = input.value.replace(/\D/g, ''); // Remover todo lo que no sea dígito
+        if (value.length > 2) {
+            value = value.substring(0,2) + '/' + value.substring(2,4); // Añadir '/' después de los primeros 2 dígitos
+        }
+        input.value = value.substring(0,5); // Limitar a 5 caracteres (MM/AA)
+    }
+
+    AOS.init({
+        once: true,
+        duration: 800,
+        easing: 'ease-out-cubic',
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const negocioPlanInput = document.getElementById('negocioPlan');
+        const planMessageDiv = document.getElementById('plan-selected-message');
+        const selectedPlanNameSpan = document.getElementById('selected-plan-name');
+        const pricingButtons = document.querySelectorAll('.pricing-button');
+        const submitButton = document.querySelector('.submit-button');
+        const paymentFieldsSection = document.getElementById('payment-fields');
+        const rucInput = document.getElementById('ruc');
+        // Cambiado el ID del elemento de mensaje de RUC para reflejar su propósito frontend
+        const rucValidationMessageFrontend = document.getElementById('rucValidationMessageFrontend');
+        const registerForm = document.getElementById('registerForm'); // Usar el ID del formulario
+
+        // Selección robusta de la sección de planes y el grid principal
+        const pricingPlansSection = document.getElementById('planes-section'); // La sección de los 3 planes
+        const mainGridContainer = document.getElementById('main-content-grid'); // El contenedor DIV padre del formulario y los planes
+    // Base de datos simulada para verificar RUCs
+// Base de datos simulada para verificar RUCs
+const negociosRegistradosSimulados = [
+    { nombre: "Pizzería La Mía", ruc: "1790000001001", estado_legal: "Válido", motivo_invalidez: "" },
+    { nombre: "Cafetería El Buen Sabor", ruc: "1790000002001", estado_legal: "Válido", motivo_invalidez: "" },
+    { nombre: "Consultora Innova S.A.", ruc: "1790000003001", estado_legal: "Pendiente", motivo_invalidez: "Documentación en revisión por la superintendencia." },
+    { nombre: "Tienda Pirata de CDs", ruc: "9990000001001", estado_legal: "Ilegal", motivo_invalidez: "No cumple con licencias de funcionamiento." },
+    { nombre: "Panadería Dulce Tentación", ruc: "1700000001001", estado_legal: "Válido", motivo_invalidez: "" } // RUC de persona natural (cédula + 001)
+];
+
+// Función PRINCIPAL para verificar si el RUC es válido para un nuevo negocio (un poco más de validación de formato).
+function verificarLegalidadNegocioSimulada(rucIngresado) {
+    rucIngresado = rucIngresado.trim(); // Quita espacios extra.
+
+    // 1. REGLA BÁSICA: El RUC NO PUEDE ESTAR VACÍO.
+    if (rucIngresado.length === 0) {
+        return {
+            estado: "Inválido (Vacío)",
+            mensaje: "Por favor, ingrese un número de RUC."
+        };
+    }
+
+    // 2. REGLA BÁSICA: El RUC SÓLO DEBE TENER NÚMEROS.
+    if (!/^\d+$/.test(rucIngresado)) {
+        return {
+            estado: "Inválido (Caracteres)",
+            mensaje: "El RUC solo debe contener números."
+        };
+    }
+
+    // 3. REGLA BÁSICA: El RUC debe tener 10 o 13 DÍGITOS.
+    if (rucIngresado.length !== 10 && rucIngresado.length !== 13) {
+        return {
+            estado: "Inválido (Longitud)",
+            mensaje: "El RUC debe tener 10 o 13 dígitos."
+        };
+    }
+
+    // 4. REGLA IMPORTANTE: Verificamos si este RUC YA ESTÁ EN NUESTRA LISTA DE NEGOCIOS CONOCIDOS.
+    const negocioEncontrado = negociosRegistradosSimulados.find(negocio => negocio.ruc === rucIngresado);
+    if (negocioEncontrado) {
+        return {
+            estado: "Existente",
+            mensaje: `El negocio "${negocioEncontrado.nombre}" ya está registrado con este RUC. Estado: ${negocioEncontrado.estado_legal}.`
+        };
+    }
+
+    // 5. REGLA ESPECIAL: RUCs que inician con '999' o '00' no sirven para negocios reales.
+    if (rucIngresado.startsWith("999") || rucIngresado.startsWith("00")) {
+        return {
+            estado: "Inválido (Ficticio/Consumidor Final)",
+            mensaje: "Este RUC es ficticio o de consumidor final y no es válido para registro de negocio."
+        };
+    }
+
+    // A partir de aquí, verificamos el FORMATO ESPECÍFICO según el tipo de RUC, incluyendo el tercer dígito.
+    const tercerDigito = parseInt(rucIngresado.substring(2, 3));
+    const primerosDosDigitos = parseInt(rucIngresado.substring(0, 2));
+
+    // Validar que los primeros dos dígitos sean de provincia válida (1 a 24)
+    if (primerosDosDigitos < 1 || primerosDosDigitos > 24) {
+        return {
+            estado: "Inválido (Provincia)",
+            mensaje: "Los dos primeros dígitos del RUC no corresponden a una provincia válida (1-24)."
+        };
+    }
+
+
+    // Si es RUC de 13 dígitos:
+    if (rucIngresado.length === 13) {
+        // RUC de Persona Natural (tercer dígito entre 0-5 y termina en '001')
+        if (tercerDigito >= 0 && tercerDigito <= 5) {
+            if (!rucIngresado.endsWith('001')) {
+                return {
+                    estado: "Inválido (Formato PN)",
+                    mensaje: "El RUC de persona natural (13 dígitos) debe terminar en '001'."
+                };
+            }
+            // Si cumple con esto, lo consideramos "Potencialmente Válido".
+            return {
+                estado: "Potencialmente Válido",
+                mensaje: "El formato sugiere RUC de persona natural. Es un posible nuevo registro."
+            };
+        }
+        // RUC de Sector Público (tercer dígito 6 y termina en '0001')
+        else if (tercerDigito === 6) {
+            if (!rucIngresado.endsWith('0001')) {
+                return {
+                    estado: "Inválido (Formato Sector Público)",
+                    mensaje: "El RUC del sector público (13 dígitos) debe terminar en '0001'."
+                };
+            }
+            // Si cumple con esto, lo consideramos "Potencialmente Válido".
+            return {
+                estado: "Potencialmente Válido",
+                mensaje: "El formato sugiere RUC del sector público. Es un posible nuevo registro."
+            };
+        }
+        // RUC de Sociedades Privadas y Extranjeros (tercer dígito entre 7-9 y termina en '001')
+        else if (tercerDigito >= 7 && tercerDigito <= 9) {
+            if (!rucIngresado.endsWith('001')) {
+                return {
+                    estado: "Inválido (Formato Sociedad)",
+                    mensaje: "El RUC de sociedad privada (13 dígitos) debe terminar en '001'."
+                };
+            }
+            // Si cumple con esto, lo consideramos "Potencialmente Válido".
+            return {
+                estado: "Potencialmente Válido",
+                mensaje: "El formato sugiere RUC de sociedad privada. Es un posible nuevo registro."
+            };
+        }
+        // Si el tercer dígito no encaja en ninguna categoría (ni 0-5, ni 6, ni 7-9) para un RUC de 13 dígitos
+        else {
+            return {
+                estado: "Inválido (Tercer Dígito RUC 13)",
+                mensaje: "El tercer dígito de un RUC de 13 dígitos es inválido para este tipo de RUC."
+            };
+        }
+    }
+    // Si es RUC de 10 dígitos (que debería ser una CÉDULA VÁLIDA para ser base de RUC PN)
+    else if (rucIngresado.length === 10) {
+        // Tercer dígito de cédula debe ser entre 0 y 5
+        if (tercerDigito < 0 || tercerDigito > 5) {
+            return {
+                estado: "Inválido (Tercer Dígito Cédula)",
+                mensaje: "El tercer dígito de la cédula es inválido (debe ser entre 0 y 5)."
+            };
+        }
+        // NOTA: No hacemos la validación matemática del dígito verificador de la cédula aquí
+        // para mantener la simplicidad, pero sí validamos los primeros dígitos.
+        return {
+            estado: "Inválido (Cédula sin 001)",
+            mensaje: "Una cédula (10 dígitos) no es un RUC. Para RUC de Persona Natural, debe terminar en '001'."
+        };
+    }
+
+    // Si por alguna razón el RUC llegó hasta aquí y no fue clasificado, es un formato desconocido.
+    return {
+        estado: "Inválido (Formato Desconocido)",
+        mensaje: "El formato de este RUC no coincide con los patrones conocidos. Por favor, verifique el número."
+    };
+}
+
+// Función para mostrar el resultado de la validación del RUC en el frontend
+function displayValidationResult(resultado) {
+    rucValidationMessageFrontend.textContent = resultado.mensaje;
+    rucValidationMessageFrontend.classList.remove('text-green-600', 'text-yellow-600', 'text-red-600');
+    rucInput.classList.remove('border-red-500'); // Remover siempre primero
+
+    if (resultado.estado.includes("Válido") || resultado.estado.includes("Potencialmente Válido")) {
+        rucValidationMessageFrontend.classList.add('text-green-600');
+    } else if (resultado.estado.includes("Pendiente") || resultado.estado.includes("Desconocido")) {
+        rucValidationMessageFrontend.classList.add('text-yellow-600');
+    } else { // Ilegal, Inválido, Existente, Ficticio/Consumidor Final, etc.
+        rucValidationMessageFrontend.classList.add('text-red-600');
+        rucInput.classList.add('border-red-500'); // Añadir borde rojo si hay error
+    }
+}
+  // Función para actualizar la UI según el plan seleccionado
+        function updateUIForPlan(plan) {
+            if (negocioPlanInput) negocioPlanInput.value = plan || '';
+            if (plan && plan !== '') {
+                selectedPlanNameSpan.textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+                planMessageDiv.style.display = 'block';
+
+                // Ajusta el texto y estilo del botón de submit
+                if (submitButton) {
+                    submitButton.textContent = 'Seleccionar Plan ' + selectedPlanNameSpan.textContent + ' y Empezar Prueba';
+                    submitButton.classList.remove('bg-gray-300', 'text-black', 'hover:bg-gray-400'); // Elimina clases neutras
+                    submitButton.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'text-white'); // Añade clases activas
+                }
+
+                // Muestra/oculta campos de pago y setea/remueve el atributo 'required'
+                if (plan === 'basico' || plan === 'pro') {
+                    paymentFieldsSection.style.display = 'block';
+                    paymentFieldsSection.querySelectorAll('input').forEach(input => {
+                        // Asegurarse de que no se pongan 'required' a inputs ocultos no relevantes para el pago
+                        if (input.id !== 'idNegocio' && input.id !== 'negocioPlan') {
+                            input.setAttribute('required', 'true');
+                        }
+                    });
+                } else {
+                    paymentFieldsSection.style.display = 'none';
+                    paymentFieldsSection.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+                }
+
+                // Oculta la sección de planes y ajusta el grid
+                if (pricingPlansSection) pricingPlansSection.style.display = 'none';
+                if (mainGridContainer) {
+                    mainGridContainer.classList.remove('lg:grid-cols-2');
+                    mainGridContainer.classList.add('lg:grid-cols-1', 'lg:justify-center');
+                }
+            } else {
+                // Estado inicial: ningún plan seleccionado
+                planMessageDiv.style.display = 'none';
+                if (submitButton) {
+                    submitButton.textContent = 'Seleccionar Plan y Empezar Prueba';
+                    // Asegura las clases para el estado inicial (sin plan seleccionado)
+                    submitButton.classList.remove('bg-indigo-600', 'hover:bg-indigo-700', 'text-white');
+                    submitButton.classList.add('bg-gray-300', 'hover:bg-gray-400', 'text-black'); // Estilo neutro/deshabilitado
+                }
+                paymentFieldsSection.style.display = 'none';
+                paymentFieldsSection.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+
+                // Muestra la sección de planes y ajusta el grid a 2 columnas
+                if (pricingPlansSection) pricingPlansSection.style.display = 'flex'; // Asegura 'flex' para la visualización correcta
+                if (mainGridContainer) {
+                    mainGridContainer.classList.remove('lg:grid-cols-1', 'lg:justify-center');
+                    mainGridContainer.classList.add('lg:grid-cols-2');
+                }
+            }
+            // Actualiza el estilo del botón de plan seleccionado
+            pricingButtons.forEach(btn => btn.classList.remove('selected-plan'));
+            const currentSelectedButton = document.querySelector(`[data-plan="${plan}"]`);
+            if (currentSelectedButton) currentSelectedButton.classList.add('selected-plan');
+        }
+
+        // --- LÓGICA DE INICIALIZACIÓN AL CARGAR LA PÁGINA ---
+        const initialPlan = negocioPlanInput ? negocioPlanInput.value : '';
+        updateUIForPlan(initialPlan); // Llama a la función para establecer el estado inicial
+
+        // Scroll al formulario si hay un mensaje de error del servidor
+        const serverErrorMessage = document.querySelector('.bg-red-100.border-red-400');
+        if (serverErrorMessage) {
+            const formSection = document.getElementById('formulario-gratis');
+            if (formSection) {
+                formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Manejar clics en los botones de selección de plan
+        pricingButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const selectedPlan = this.dataset.plan;
+                updateUIForPlan(selectedPlan);
+                const formSection = document.getElementById('formulario-gratis');
+                if (formSection) {
+                    formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Event listener para validar el RUC al teclear
+        if (rucInput) {
+            rucInput.addEventListener('input', () => {
+                const ruc = rucInput.value;
+                if (ruc.length > 0) {
+                    const resultado = verificarLegalidadNegocioSimulada(ruc);
+                    displayValidationResult(resultado);
+                } else {
+                    // Si el campo está vacío, limpiar el mensaje y el borde
+                    rucValidationMessageFrontend.textContent = '';
+                    rucValidationMessageFrontend.className = 'validation-message'; // Restablece clases
+                    rucInput.classList.remove('border-red-500');
+                }
+            });
+            // Ejecutar la validación al cargar la página si el campo RUC ya tiene un valor (ej. por error de backend)
+            if (rucInput.value.trim() !== '') {
+                const resultado = verificarLegalidadNegocioSimulada(rucInput.value);
+                displayValidationResult(resultado);
+            }
+        }
+
+        // Validar formulario antes de enviar
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(event) {
+                // Validar que se ha seleccionado un plan
+                if (!negocioPlanInput.value || negocioPlanInput.value === '') {
+                    alert('Por favor, selecciona un plan antes de continuar.');
+                    event.preventDefault();
+                    if (pricingPlansSection) {
+                        pricingPlansSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    return;
+                }
+
+                // Validar RUC con la lógica simulada del frontend
+                const ruc = rucInput.value.trim();
+                const rucValidationResult = verificarLegalidadNegocioSimulada(ruc);
+                displayValidationResult(rucValidationResult); // Asegura que el mensaje se muestre
+
+                if (rucValidationResult.estado === "Existente" || rucValidationResult.estado.includes("Inválido") || rucValidationResult.estado.includes("Ilegal") || rucValidationResult.estado.includes("Ficticio")) {
+                    alert(`No se puede registrar el negocio debido al estado del RUC: ${rucValidationResult.mensaje}`);
+                    event.preventDefault();
+                    rucInput.focus();
+                    rucInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+
+                // Validar campos de pago si son necesarios
+                const requiresPaymentInfo = negocioPlanInput.value === 'basico' || negocioPlanInput.value === 'pro';
+                if (requiresPaymentInfo) {
+                    const cardNumber = document.getElementById('cardNumber').value.trim();
+                    const expiryDate = document.getElementById('expiryDate').value.trim();
+                    const cvv = document.getElementById('cvv').value.trim();
+                    const billingAddress = document.getElementById('billingAddress').value.trim();
+
+                    if (!cardNumber || !expiryDate || !cvv || !billingAddress) {
+                        alert('Por favor, completa todos los datos de pago para el plan seleccionado.');
+                        event.preventDefault();
+                        paymentFieldsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        return;
+                    }
+                }
+
+                // Validar términos y condiciones
+                const termsChecked = document.getElementById('termsAndPrivacy').checked;
+                if (!termsChecked) {
+                    alert('Debes aceptar los Términos y Condiciones y la Política de Privacidad.');
+                    event.preventDefault();
+                    document.getElementById('termsAndPrivacy').focus();
+                    return;
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

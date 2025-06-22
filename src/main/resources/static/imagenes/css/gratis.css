@@ -92,3 +92,17 @@
         .pricing-button:hover {
             transform: translateY(-1px);
         }
+        /* Estilos para el botón de plan seleccionado */
+                .pricing-button.selected-plan {
+                    background-color: #6366F1; /* Un color más oscuro de indigo */
+                    color: white !important; /* Texto blanco */
+                    border: 2px solid #4338CA; /* Borde más oscuro */
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-2px);
+                }
+                /* Para el plan PRO seleccionado, ya que tiene un color de fondo diferente */
+                .pricing-card.recommended .pricing-button.selected-plan {
+                    background-color: white !important;
+                    color: #4338CA !important; /* Vuelve a usar el color principal de indigo */
+                    border: 2px solid #4338CA;
+                }

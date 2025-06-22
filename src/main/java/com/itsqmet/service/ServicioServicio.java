@@ -47,7 +47,7 @@ public class ServicioServicio {
 
         servicioExistente.setNombre(servicioActualizado.getNombre());
         servicioExistente.setPrecio(servicioActualizado.getPrecio());
-        servicioExistente.setDuracionMinutos(servicioActualizado.getDuracionMinutos());
+        servicioExistente.setDuracionHoras(servicioActualizado.getDuracionHoras());
 
         // Si se actualiza el negocio
         if (servicioActualizado.getNegocio() != null && servicioActualizado.getNegocio().getIdNegocio() != null) {

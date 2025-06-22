@@ -44,6 +44,7 @@
                 <th class="py-3 px-4 text-left text-xs font-bold text-gray-700 uppercase">Teléfono</th>
                 <th class="py-3 px-4 text-left text-xs font-bold text-gray-700 uppercase">Email Profesional</th> <th class="py-3 px-4 text-left text-xs font-bold text-gray-700 uppercase">Nombre Negocio</th>
                 <th class="py-3 px-4 text-left text-xs font-bold text-gray-700 uppercase">Tipo Negocio</th>
+                <th class="py-3 px-4 text-left text-xs font-bold text-gray-700 uppercase">RUC</th>
                 <th class="py-3 px-4 text-center text-xs font-bold text-gray-700 uppercase">Acciones</th>
             </tr>
             </thead>
@@ -54,6 +55,7 @@
                 <td class="py-3 px-4" th:text="${negocio.telefono}"></td>
                 <td class="py-3 px-4" th:text="${negocio.emailProfesional}"></td> <td class="py-3 px-4" th:text="${negocio.nombreNegocio}"></td>
                 <td class="py-3 px-4" th:text="${negocio.tipoNegocio}"></td>
+                <td class="py-3 px-4" th:text="${negocio.ruc}"></td>
                 <td class="py-3 px-4 whitespace-nowrap text-center space-x-2">
                     <a th:href="@{/editarNegocio/{id}(id=${negocio.idNegocio})}"
                        class="inline-block px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 transition text-xs font-bold">Editar</a>

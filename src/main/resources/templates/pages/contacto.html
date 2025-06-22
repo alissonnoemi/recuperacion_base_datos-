@@ -33,12 +33,14 @@
             <label for="id" class="block text-sm font-medium text-gray-700">ID</label>
             <div class="mt-1">
               <input id="id" name="id" type="number" autocomplete="id" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+
             </div>
           </div>
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
             <div class="mt-1">
               <input id="name" name="name" type="text" autocomplete="name" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-600 text-sm mt-1"></span>
             </div>
           </div>
 
@@ -46,6 +48,7 @@
             <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
             <div class="mt-1">
               <input id="email" name="email" type="email" autocomplete="email"  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-600 text-sm mt-1"></span>
             </div>
           </div>
 
@@ -53,6 +56,7 @@
             <label for="subject" class="block text-sm font-medium text-gray-700">Asunto</label>
             <div class="mt-1">
               <input id="subject" name="subject" type="text"  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              <span th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}" class="text-red-600 text-sm mt-1"></span>
             </div>
           </div>
 
@@ -60,11 +64,13 @@
             <label for="message" class="block text-sm font-medium text-gray-700">Tu Mensaje</label>
             <div class="mt-1">
               <textarea id="message" name="message" rows="5" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+              <span th:if="${#fields.hasErrors('message')}" th:errors="*{message}" class="text-red-600 text-sm mt-1"></span>
             </div>
           </div>
 
           <div>
             <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300">
+
               Enviar Mensaje
             </button>
           </div>

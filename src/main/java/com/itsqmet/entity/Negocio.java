@@ -10,38 +10,37 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor
-@Data // Lombok para getters, setters, toString, equals, hashCode
+@Data
 @Entity
+@Table(name = "negocios")
 public class Negocio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idNegocio; // Esta es tu clave primaria
-
-    @Column(unique = true) // Si quieres que el nombre completo sea único
+    private Long idNegocio;
     @NotBlank(message = "El nombre completo es obligatorio")
     @Size(max = 100, message = "El nombre completo no debe exceder 100 caracteres")
     private String nombreCompleto;
-
-    @NotBlank(message = "El email del profesional es obligatorio")
+    @Column(unique = true)
+    @NotBlank(message = "El email profesional es obligatorio")
     @Email(message = "Debe ingresar un email válido")
     private String emailProfesional;
-
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
+    private String password;
     @NotBlank(message = "El nombre del negocio es obligatorio")
     private String nombreNegocio;
-
     @NotBlank(message = "El tipo de negocio es obligatorio")
     private String tipoNegocio;
-
     private String direccion;
     private String telefono;
-
-    private String plan; // Este campo almacenará el plan elegido (basico, pro, empresarial)
-
-    @OneToMany(mappedBy = "negocio", fetch = FetchType.LAZY, cascade = CascadeType.ALL) // Agregado CascadeType.ALL si quieres que se eliminen profesionales con el negocio
+    @Column(unique = true) // El RUC DEBE ser único para cada negocio
+    @NotBlank(message = "El RUC es obligatorio")
+    @Size(min = 10, max = 13, message = "El RUC debe tener entre 10 y 13 dígitos")
+    private String ruc;
+    private String plan;
+    @OneToMany(mappedBy = "negocio", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Profesional> profesionales;
-
-    // Un negocio puede ofrecer muchos servicios
-    @OneToMany(mappedBy = "negocio", fetch = FetchType.LAZY, cascade = CascadeType.ALL) // Agregado CascadeType.ALL
+    @OneToMany(mappedBy = "negocio", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Servicio> servicios;
 
     public Long getIdNegocio() {
@@ -66,6 +65,14 @@ public class Negocio {
 
     public void setEmailProfesional(String emailProfesional) {
         this.emailProfesional = emailProfesional;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getNombreNegocio() {
@@ -98,6 +105,14 @@ public class Negocio {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
     }
 
     public String getPlan() {

@@ -43,10 +43,10 @@ public class CitasServicio {
         }
 
         // Si la duración no se especifica o es inválida, usa la del servicio
-        if (nuevaCita.getDuracionServicioMinutos() == null || nuevaCita.getDuracionServicioMinutos() <= 0) {
-            nuevaCita.setDuracionServicioMinutos(servicio.getDuracionMinutos());
+        if (nuevaCita.getDuracionServicioHoras() == null || nuevaCita.getDuracionServicioHoras() <= 0) {
+            nuevaCita.setDuracionServicioHoras(servicio.getDuracionHoras());
         }
-        nuevaCita.setFechaHoraFin(nuevaCita.getFechaHoraInicio().plusMinutes(nuevaCita.getDuracionServicioMinutos()));
+        nuevaCita.setFechaHoraFin(nuevaCita.getFechaHoraInicio().plusMinutes(nuevaCita.getDuracionServicioHoras()));
 
         List<Citas> citasConflictivas = citasRepositorio.findConflictingAppointments(
                 profesional, nuevaCita.getFechaHoraInicio(), nuevaCita.getFechaHoraFin());
@@ -103,12 +103,12 @@ public class CitasServicio {
         }
 
         // Determinar la duración final para citaExistente
-        if (citaActualizada.getDuracionServicioMinutos() != null && citaActualizada.getDuracionServicioMinutos() > 0) {
+        if (citaActualizada.getDuracionServicioHoras() != null && citaActualizada.getDuracionServicioHoras() > 0) {
             // Si el usuario envió una duración válida, la usamos
-            citaExistente.setDuracionServicioMinutos(citaActualizada.getDuracionServicioMinutos());
-        } else if (servicioActualSeleccionado != null && servicioActualSeleccionado.getDuracionMinutos() != null && servicioActualSeleccionado.getDuracionMinutos() > 0) {
+            citaExistente.setDuracionServicioHoras(citaActualizada.getDuracionServicioHoras());
+        } else if (servicioActualSeleccionado != null && servicioActualSeleccionado.getDuracionHoras() != null && servicioActualSeleccionado.getDuracionHoras() > 0) {
             // Si no se envió duración o es inválida, pero tenemos un servicio (nuevo o existente) con duración, la usamos
-            citaExistente.setDuracionServicioMinutos(servicioActualSeleccionado.getDuracionMinutos());
+            citaExistente.setDuracionServicioHoras(servicioActualSeleccionado.getDuracionHoras());
         } else {
             // Si no hay duración válida ni servicio con duración, puedes manejarlo aquí (ej. lanzar error, usar un valor por defecto)
             // Por ahora, si no se puede determinar, se mantendrá el valor que ya tenía citaExistente o null.
@@ -117,8 +117,8 @@ public class CitasServicio {
 
 
         // Recalcular la fecha de fin con la duración final (ahora que la duración está establecida)
-        if (citaExistente.getFechaHoraInicio() != null && citaExistente.getDuracionServicioMinutos() != null) {
-            citaExistente.setFechaHoraFin(citaExistente.getFechaHoraInicio().plusMinutes(citaExistente.getDuracionServicioMinutos()));
+        if (citaExistente.getFechaHoraInicio() != null && citaExistente.getDuracionServicioHoras() != null) {
+            citaExistente.setFechaHoraFin(citaExistente.getFechaHoraInicio().plusMinutes(citaExistente.getDuracionServicioHoras()));
         }
 
 

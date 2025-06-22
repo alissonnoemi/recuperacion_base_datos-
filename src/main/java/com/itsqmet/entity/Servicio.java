@@ -1,6 +1,7 @@
 package com.itsqmet.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,9 +22,10 @@ public class Servicio {
     @NotNull(message = "El precio es obligatorio")
     @Min(value = 0, message = "El precio no puede ser negativo")
     private Double precio;
-    @NotNull(message = "La duración en minutos es obligatoria")
-    @Min(value = 1, message = "La duración debe ser al menos 1 minuto")
-    private Long duracionMinutos;
+    @NotNull(message = "La duración en horas es obligatoria")
+    @Min(value = 1, message = "La duración debe ser al menos 1 hora")
+    @Max(value = 24, message = "La duración no puede exceder 24 horas")
+    private Long duracionHoras;
     // Muchos servicios pertenecen a un Negocio
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_negocio", nullable = false)
@@ -56,12 +58,12 @@ public class Servicio {
         this.precio = precio;
     }
 
-    public Long getDuracionMinutos() {
-        return duracionMinutos;
+    public Long getDuracionHoras() {
+        return duracionHoras;
     }
 
-    public void setDuracionMinutos(Long duracionMinutos) {
-        this.duracionMinutos = duracionMinutos;
+    public void setDuracionHoras(Long duracionHoras) {
+        this.duracionHoras = duracionHoras;
     }
 
     public Negocio getNegocio() {

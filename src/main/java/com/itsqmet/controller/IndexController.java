@@ -1,6 +1,8 @@
 package com.itsqmet.controller;
 
+import com.itsqmet.entity.Demo;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -29,9 +31,10 @@ public class IndexController {
     public String mostrarTalleres() {
         return "/pages/talleres";
     }
-    @GetMapping ("/demo")
-    public String mostrarDemo() {
-        return "/pages/demo";
+    @GetMapping("/demo")
+    public String mostrarDemo(Model model) {
+        model.addAttribute("demo", new Demo());
+        return "pages/demo";
     }
     @GetMapping ("/gestionPersonal")
     public String mostrarGestionPersonal() {
@@ -52,10 +55,6 @@ public class IndexController {
     @GetMapping ("/agradecimiento")
     public String mostrarAgradecimiento() {
         return "/pages/agradecimiento";
-    }
-    @GetMapping ("/contacto")
-    public String mostrarContacto() {
-        return "/pages/contacto";
     }
     @GetMapping ("/inicio")
     public String mostrarInicio() {

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class ProfesionalesController { // Renombrado de ProfesionalesController a ProfesionalController (singular es más común)
+public class ProfesionalesController {
     @Autowired
     private ProfesionalServicio profesionalServicio;
     @Autowired
@@ -39,45 +39,34 @@ public class ProfesionalesController { // Renombrado de ProfesionalesController 
         model.addAttribute("profesionales", profesionalServicio.obtenerTodosLosProfesionales());
         return "pages/listaProfesionales";
     }
-
-    // --- Mostrar formulario para CREAR un nuevo profesional ---
-    // Este endpoint es el que usará el botón "Crear Nuevo Profesional"
-    @GetMapping("/crearProfesional") // CAMBIO DE ENDPOINT
+    @GetMapping("/crearProfesional")
     public String mostrarFormularioCrearProfesional(Model model) {
         Profesional nuevoProfesional = new Profesional();
-        // Es buena práctica inicializar el Negocio para evitar NullPointerException en el formulario
-        // si el profesional no tiene un negocio asociado inicialmente.
         if (nuevoProfesional.getNegocio() == null) {
             nuevoProfesional.setNegocio(new Negocio());
         }
         model.addAttribute("profesional", nuevoProfesional);
         model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
-        return "pages/profesionales"; // Reutiliza el mismo formulario
+        return "pages/profesionales";
     }
-
-    // --- Procesar el formulario de CREACIÓN de profesional ---
-    // Este @PostMapping maneja las solicitudes del formulario cuando se está CREANDO un nuevo profesional.
-    @PostMapping("/crearProfesional") // CAMBIO DE ENDPOINT (Coincide con th:action cuando idProfesional es null)
+    @PostMapping("/crearProfesional")
     public String crearProfesional(@Valid @ModelAttribute("profesional") Profesional profesional, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
-            return "pages/profesionales"; // Regresa al formulario con errores
+            return "pages/profesionales";
         }
         try {
             profesionalServicio.guardarProfesional(profesional);
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Profesional creado exitosamente!");
             return "redirect:/listaProfesionales";
-        } catch (Exception e) { // Se usa Exception genérica para capturar cualquier error
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al crear el profesional: " + e.getMessage());
             model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
-            return "pages/profesionales"; // Regresa al formulario con el error
+            return "pages/profesionales";
         }
     }
-
-    // --- Mostrar formulario para EDITAR un profesional ---
-    // Este endpoint es el que usará el botón "Editar" en la lista.
     @GetMapping("/editarProfesional/{id}")
     public String mostrarFormularioEditarProfesional(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Profesional> profesionalOptional = profesionalServicio.obtenerProfesionalPorId(id);
@@ -91,10 +80,7 @@ public class ProfesionalesController { // Renombrado de ProfesionalesController 
             return "redirect:/listaProfesionales";
         }
     }
-
-    // --- Procesar el formulario de ACTUALIZACIÓN de profesional ---
-    // ESTE ES EL NUEVO @PostMapping que necesitas para manejar las actualizaciones.
-    @PostMapping("/editarProfesional/{id}") // Coincide con th:action cuando idProfesional NO es null
+    @PostMapping("/editarProfesional/{id}")
     public String actualizarProfesional(@PathVariable("id") Long id,
                                         @Valid @ModelAttribute("profesional") Profesional profesional,
                                         BindingResult result,
@@ -102,12 +88,11 @@ public class ProfesionalesController { // Renombrado de ProfesionalesController 
                                         Model model) {
         if (result.hasErrors()) {
             model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
-            return "pages/profesionales"; // Regresa al formulario con errores
+            return "pages/profesionales";
         }
         try {
-            // Aseguramos que el ID del profesional sea el del path variable, crucial para la actualización
-            profesional.setIdProfesional(id); // Asumiendo que el campo ID en Profesional es 'idProfesional'
-            profesionalServicio.guardarProfesional(profesional); // Este método debe manejar la actualización
+            profesional.setIdProfesional(id);
+            profesionalServicio.guardarProfesional(profesional);
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Profesional actualizado exitosamente!");
             return "redirect:/listaProfesionales";
@@ -115,17 +100,12 @@ public class ProfesionalesController { // Renombrado de ProfesionalesController 
             redirectAttributes.addFlashAttribute("mensajeTipo", "error");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Error al actualizar el profesional: " + e.getMessage());
             model.addAttribute("negocios", negocioServicio.obtenerTodosLosNegocios());
-            return "pages/profesionales"; // Regresa al formulario con el error
+            return "pages/profesionales";
         }
     }
-
-
-    // --- Eliminar un profesional (Mantenemos tu @PostMapping, aunque un @GetMapping simple es más común para eliminar desde enlaces) ---
-    // ¡OJO! Si eliminas desde un enlace simple (<a href="...">), DEBERÍA SER UN @GETMapping.
-    // Si es un botón en un formulario (incluso pequeño), @PostMapping está bien.
     @PostMapping("/eliminarProfesional/{id}")
     public String eliminarProfesional(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        try { // Añadimos un try-catch para manejar errores de eliminación
+        try {
             profesionalServicio.eliminarProfesional(id);
             redirectAttributes.addFlashAttribute("mensajeTipo", "success");
             redirectAttributes.addFlashAttribute("mensajeCuerpo", "Profesional eliminado exitosamente!");
@@ -135,8 +115,6 @@ public class ProfesionalesController { // Renombrado de ProfesionalesController 
         }
         return "redirect:/listaProfesionales";
     }
-
-    // --- Ver historial de citas de un profesional ---
     @GetMapping("/historialCitas/{idProfesional}")
     public String verHistorialCitasProfesional(@PathVariable("idProfesional") Long idProfesional, Model model, RedirectAttributes redirectAttributes) {
         Optional<Profesional> profesionalOptional = profesionalServicio.obtenerProfesionalPorId(idProfesional);

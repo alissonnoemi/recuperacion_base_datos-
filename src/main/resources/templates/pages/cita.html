@@ -5,7 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <title>Agendar Cita</title>
     <style>
         /* Mantén tus estilos CSS aquí */
@@ -83,14 +83,10 @@
 <body class="bg-gradient-to-br from-indigo-100 via-blue-50 to-white min-h-screen font-sans leading-normal tracking-normal">
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div th:if="${messageType}" th:classappend="${messageType == 'success' ? 'bg-green-600' : 'bg-red-600'}"
+<div th:if="${mensajeTipo}" th:classappend="${mensajeTipo == 'success' ? 'bg-green-600' : 'bg-red-600'}"
      class="flash-message fixed top-4 right-4 z-50 p-4 rounded-lg text-white font-bold shadow-lg flash-message-animation">
-    <p th:text="${messageBody}"></p>
+    <p th:text="${mensajeCuerpo}"></p>
 </div>
-<div th:if="${error}" class="flash-message fixed top-4 right-4 z-50 p-4 rounded-lg text-white font-bold shadow-lg bg-red-600 flash-message-animation">
-    <p th:text="${error}"></p>
-</div>
-
 <div class="bg-gradient-to-r from-blue-700 to-indigo-600 py-12 mb-10 shadow-lg rounded-b-3xl">
     <div class="container mx-auto px-4 text-center">
         <h1 class="form-title animate__animated animate__fadeInDown">
@@ -114,31 +110,35 @@
         </div>
 
         <div class="form-group">
+            <label for="negocio" class="form-label">Negocio:</label>
+            <select id="negocio" th:field="*{negocio.idNegocio}" class="form-select" onchange="cargarProfesionalesYServicios()">
+                <option value="">-- Selecciona un negocio --</option>
+                <option th:each="neg : ${negocios}"
+                        th:value="${neg.idNegocio}"
+                        th:text="${neg.nombreNegocio}"
+                        th:selected="${cita.negocio != null and cita.negocio.idNegocio == neg.idNegocio}"></option>
+            </select>
+            <span th:if="${#fields.hasErrors('negocio')}" th:errors="*{negocio}" class="form-error"></span>
+        </div>
+
+        <div class="form-group">
             <label for="servicio" class="form-label">Servicio:</label>
-            <select id="servicio" th:field="*{servicio.idServicio}" class="form-select" onchange="actualizarCamposServicio()">
+            <select id="servicio" th:field="*{servicio.idServicio}" class="form-select" onchange="actualizarDuracionServicio()">
                 <option value="">-- Selecciona un servicio --</option>
-                <option th:each="ser : ${servicios}"
-                        th:value="${ser.idServicio}"
-                        th:text="${ser.nombre}"
-                        th:attr="data-duracion=${ser.duracionMinutos},data-negocio=${ser.negocio != null ? ser.negocio.nombreNegocio : ''}"
-                        th:selected="${cita.servicio != null and cita.servicio.idServicio == ser.idServicio}"> </option>
             </select>
             <span th:if="${#fields.hasErrors('servicio')}" th:errors="*{servicio}" class="form-error"></span>
         </div>
 
         <div class="form-group">
-            <label for="duracionServicioMinutos" class="form-label">Duración (minutos):</label>
-            <input type="number" id="duracionServicioMinutos" th:field="*{duracionServicioMinutos}" min="1" class="form-input" />
-            <span th:if="${#fields.hasErrors('duracionServicioMinutos')}" th:errors="*{duracionServicioMinutos}" class="form-error"></span>
+            <label for="duracionServicioHoras" class="form-label">Duración:</label>
+            <input type="number" id="duracionServicioHoras" th:field="*{duracionServicioHoras}" min="1" class="form-input" readonly />
+            <span th:if="${#fields.hasErrors('duracionServicioHoras')}" th:errors="*{duracionServicioHoras}" class="form-error"></span>
         </div>
+
         <div class="form-group">
             <label for="profesional" class="form-label">Profesional:</label>
             <select id="profesional" th:field="*{profesional.idProfesional}" class="form-select">
                 <option value="">-- Selecciona un profesional --</option>
-                <option th:each="pro : ${profesionales}"
-                        th:value="${pro.idProfesional}"
-                        th:text="${pro.nombreCompleto}"
-                        th:selected="${cita.profesional != null and cita.profesional.idProfesional == pro.idProfesional}"></option>
             </select>
             <span th:if="${#fields.hasErrors('profesional')}" th:errors="*{profesional}" class="form-error"></span>
         </div>
@@ -151,7 +151,7 @@
 
         <div class="form-group">
             <label for="fechaHoraFin" class="form-label">Fecha y hora de fin:</label>
-            <input type="datetime-local" id="fechaHoraFin" th:field="*{fechaHoraFin}" class="form-input" />
+            <input type="datetime-local" id="fechaHoraFin" th:field="*{fechaHoraFin}" class="form-input"  />
             <span th:if="${#fields.hasErrors('fechaHoraFin')}" th:errors="*{fechaHoraFin}" class="form-error"></span>
         </div>
 
@@ -174,44 +174,96 @@
 </div>
 
 <script>
-    // Esta función se encarga de rellenar la duración del servicio
-    function actualizarCamposServicio() {
-        var selectServicio = document.getElementById('servicio');
-        var inputDuracion = document.getElementById('duracionServicioMinutos');
-        // var inputNombreNegocio = document.getElementById('nombreNegocio'); // Si mantienes este campo
+    function actualizarDuracionServicio() {
+      var selectServicio = document.getElementById('servicio');
+      var inputDuracion = document.getElementById('duracionServicioHoras');
 
-        if (selectServicio.selectedIndex > 0) { // Si se ha seleccionado un servicio (no la opción "-- Selecciona...")
-            var selectedOption = selectServicio.options[selectServicio.selectedIndex];
-            inputDuracion.value = selectedOption.getAttribute('data-duracion') || '';
-            // if (inputNombreNegocio) { // Si el campo existe
-            //     inputNombreNegocio.value = selectedOption.getAttribute('data-negocio') || '';
-            // }
-        } else {
-            // Si no hay servicio seleccionado, limpia los campos
-            inputDuracion.value = '';
-            // if (inputNombreNegocio) {
-            //     inputNombreNegocio.value = '';
-            // }
-        }
-    }
+      if (selectServicio.selectedIndex > 0) {
+          var selectedOption = selectServicio.options[selectServicio.selectedIndex];
+          if (selectedOption.hasAttribute('data-duracion')) {
+              inputDuracion.value = selectedOption.getAttribute('data-duracion');
+          } else {
+              inputDuracion.value = '';
+          }
+      } else {
+          inputDuracion.value = '';
+      }
+  }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Ejecutar al cargar la página para inicializar los campos (importante para edición)
-        actualizarCamposServicio();
+  function cargarProfesionalesYServicios() {
+      var negocioId = document.getElementById('negocio').value;
+      var profesionalSelect = document.getElementById('profesional');
+      var servicioSelect = document.getElementById('servicio');
 
-        // Eliminar mensajes flash después de la animación
-        const flashMessages = document.querySelectorAll('.flash-message');
-        flashMessages.forEach(msg => {
-            msg.addEventListener('animationend', () => {
-                msg.remove();
-            });
-        });
-    });
+      const profesionalGuardadoId = '[[${cita.profesional != null ? cita.profesional.idProfesional : ''}]]';
+      const servicioGuardadoId = '[[${cita.servicio != null ? cita.servicio.idServicio : ''}]]';
 
-    // Scripts de Flowbite y AOS si los utilizas
-    // <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-// <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-// <script> AOS.init(); </script>
+      profesionalSelect.innerHTML = '<option value="">-- Selecciona un profesional --</option>';
+      servicioSelect.innerHTML = '<option value="">-- Selecciona un servicio --</option>';
+      document.getElementById('duracionServicioHoras').value = '';
+
+      if (negocioId) {
+          fetch('/api/profesionales/porNegocio/' + negocioId)
+              .then(response => response.json())
+              .then(data => {
+                  data.forEach(profesional => {
+                      let option = document.createElement('option');
+                      option.value = profesional.idProfesional;
+                      option.textContent = profesional.nombreCompleto;
+                      profesionalSelect.appendChild(option);
+                  });
+                  if (profesionalGuardadoId) {
+                      profesionalSelect.value = profesionalGuardadoId;
+                  }
+              });
+
+          fetch('/api/servicios/porNegocio/' + negocioId)
+              .then(response => response.json())
+              .then(data => {
+                  data.forEach(servicio => {
+                      let option = document.createElement('option');
+                      option.value = servicio.idServicio;
+                      option.textContent = servicio.nombre;
+                      // Usa la propiedad correcta según tu DTO/entidad
+                      option.setAttribute('data-duracion', servicio.duracionHoras);
+                      servicioSelect.appendChild(option);
+                  });
+                  if (servicioGuardadoId) {
+                      servicioSelect.value = servicioGuardadoId;
+                      actualizarDuracionServicio();
+                  }
+              });
+      }
+  }
+
+      document.addEventListener('DOMContentLoaded', function() {
+          // Si está en modo edición, el select de negocio podría ya tener un valor de Thymeleaf.
+          // Si es así, carga los profesionales y servicios para ese negocio.
+          const initialNegocioId = document.getElementById('negocio').value;
+          if (initialNegocioId) {
+              cargarProfesionalesYServicios();
+          } else {
+              // Para nuevas citas, asegúrate de que la duración sea inicialmente 0 (o vacía, según tu campo de entrada)
+              document.getElementById('duracionServicioMinutos').value = '';
+          }
+
+          // Inicializa AOS si lo estás usando
+          if (typeof AOS !== 'undefined') {
+              AOS.init();
+          }
+
+          // Limpieza de la animación de mensajes flash
+          const flashMessages = document.querySelectorAll('.flash-message');
+          flashMessages.forEach(msg => {
+              msg.addEventListener('animationend', () => {
+                  msg.remove();
+              });
+              // Opcional: Establece un tiempo de espera para eliminar los mensajes incluso si la animación no se está escuchando estrictamente, para mayor robustez
+              setTimeout(() => {
+                  msg.remove();
+              }, 5000); // Eliminar después de 5 segundos
+          });
+      });
 </script>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

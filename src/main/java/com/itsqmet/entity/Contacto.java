@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -12,9 +14,16 @@ public class Contacto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank (message = "El nombre es obligatorio")
+    @Size(max = 30, message = "El nombre no debe exceder 30 caracteres")
     private String name;
+    @NotBlank (message = "El email es obligatorio")
+    @Size(max = 50, message = "El email no debe exceder 50 caracteres")
+    @jakarta.validation.constraints.Email(message = "Debe ingresar un email válido")
     private String email;
     private String subject;
+    @NotBlank (message = "El mensaje es obligatorio")
+    @Size(max = 200, message = "El mensaje no debe exceder 200 caracteres")
     private String message;
 
     public Long getId() {

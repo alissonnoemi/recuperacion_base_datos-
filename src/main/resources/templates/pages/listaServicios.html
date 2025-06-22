@@ -35,7 +35,7 @@
                 <th class="py-3 px-4 text-left">ID</th>
                 <th class="py-3 px-4 text-left">Nombre</th>
                 <th class="py-3 px-4 text-left">Precio</th>
-                <th class="py-3 px-4 text-left">Duración (Minutos)</th>
+                <th class="py-3 px-4 text-left">Duración</th>
                 <th class="py-3 px-4 text-left">Negocio</th>
                 <th class="py-3 px-4 text-left">Acciones</th>
             </tr>
@@ -45,7 +45,7 @@
                 <td class="py-3 px-4" th:text="${servicio.idServicio}"></td>
                 <td class="py-3 px-4" th:text="${servicio.nombre}"></td>
                 <td class="py-3 px-4" th:text="${servicio.precio}"></td>
-                <td class="py-3 px-4" th:text="${servicio.duracionMinutos}"></td>
+                <td class="py-3 px-4" th:text="${servicio.duracionHoras}"></td>
                 <td class="py-3 px-4" th:text="${servicio.negocio?.nombreNegocio}"></td> <td class="py-3 px-4 whitespace-nowrap">
                 <a th:href="@{/editarServicio/{id}(id=${servicio.idServicio})}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-xs mr-2">
                     Editar
@@ -61,6 +61,8 @@
         </table>
     </div>
     <a th:href="@{/}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Volver al Inicio</a>
+    <a th:href="@{/listaProfesionales}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Ir a Profesionales</a>
+    <a th:href="@{/listaServicios}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition">Ir a Servicios</a>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

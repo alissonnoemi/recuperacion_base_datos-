@@ -1,17 +1,17 @@
 package com.itsqmet.entity;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Entity
+@Document
 @Data
 public class Demo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @MongoId
     private Long id;
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 10, message = "El nombre no debe exceder 10 caracteres")

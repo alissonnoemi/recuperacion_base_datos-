@@ -1,15 +1,16 @@
 package com.itsqmet.entity;
-
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Data
-@Entity
+@Document(collection = "permisos")
 public class Permiso {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(unique = true, nullable = false)
+
+    @MongoId
+    private String id;
+    @Indexed(unique = true)
     private String nombre;
     private String descripcion;
 }

@@ -1,16 +1,16 @@
 package com.itsqmet.entity;
-
-import jakarta.persistence.*;
 import lombok.Data;
-import java.math.BigDecimal;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Entity
 @Data
+@Document(collection = "planes")
 public class Plan {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  long id;
-    @Column(unique = true)
+
+    @MongoId
+    private String id;
+    @Indexed(unique = true)
     private String nombre;
     private String descripcion;
     private Double precio;

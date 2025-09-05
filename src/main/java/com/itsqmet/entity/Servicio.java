@@ -32,4 +32,52 @@ public class Servicio {
     private Long duracionHoras;
     private String negocioId;
     private List<String> citasIds;
+
+    public String getIdServicio() {
+        return idServicio;
+    }
+
+    public void setIdServicio(String idServicio) {
+        this.idServicio = idServicio;
+    }
+
+    public @NotBlank(message = "El nombre del servicio es obligatorio") String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(@NotBlank(message = "El nombre del servicio es obligatorio") String nombre) {
+        this.nombre = nombre;
+    }
+
+    public @NotNull(message = "El precio es obligatorio") @Min(value = 0, message = "El precio no puede ser negativo") Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(@NotNull(message = "El precio es obligatorio") @Min(value = 0, message = "El precio no puede ser negativo") Double precio) {
+        this.precio = precio;
+    }
+
+    public @NotNull(message = "La duración en horas es obligatoria") @Min(value = 1, message = "La duración debe ser al menos 1 hora") @Max(value = 24, message = "La duración no puede exceder 24 horas") Long getDuracionHoras() {
+        return duracionHoras;
+    }
+
+    public void setDuracionHoras(@NotNull(message = "La duración en horas es obligatoria") @Min(value = 1, message = "La duración debe ser al menos 1 hora") @Max(value = 24, message = "La duración no puede exceder 24 horas") Long duracionHoras) {
+        this.duracionHoras = duracionHoras;
+    }
+
+    public String getNegocioId() {
+        return negocioId;
+    }
+
+    public void setNegocioId(String negocioId) {
+        this.negocioId = negocioId;
+    }
+
+    public List<String> getCitasIds() {
+        return citasIds;
+    }
+
+    public void setCitasIds(List<String> citasIds) {
+        this.citasIds = citasIds;
+    }
 }

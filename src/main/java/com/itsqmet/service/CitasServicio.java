@@ -2,54 +2,62 @@ package com.itsqmet.service;
 
 import com.itsqmet.entity.*;
 import com.itsqmet.repository.*;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CitasServicio {
+
     @Autowired
     private citasRepositorio citasRepositorio;
+
     @Autowired
-    private clienteRepositorio pacienteRepositorio;
+    private clienteRepositorio clienteRepositorio;
+
     @Autowired
     private servicioRepositorio servicioRepositorio;
+
     @Autowired
     private profesionalRepositorio profesionalRepositorio;
+
     @Autowired
     private negocioRepositorio negocioRepositorio;
 
-    @Transactional
-    public Citas agendarNuevaCita(Citas nuevaCita) throws Exception {
-        // Validación de IDs y recuperación de entidades
-        Cliente cliente = pacienteRepositorio.findById(nuevaCita.getCliente().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado con ID: " + nuevaCita.getCliente().getId()));
-        Servicio servicio = servicioRepositorio.findById(nuevaCita.getServicio().getIdServicio())
-                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado con ID: " + nuevaCita.getServicio().getIdServicio()));
-        Profesional profesional = profesionalRepositorio.findById(nuevaCita.getProfesional().getIdProfesional())
-                .orElseThrow(() -> new IllegalArgumentException("Profesional no encontrado con ID: " + nuevaCita.getProfesional().getIdProfesional()));
+    public Citas agendarNuevaCita(Citas nuevaCita) {
+        Cliente cliente = clienteRepositorio.findById(nuevaCita.getClienteId())
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + nuevaCita.getClienteId()));
 
-        nuevaCita.setCliente(cliente);
-        nuevaCita.setServicio(servicio);
-        nuevaCita.setProfesional(profesional);
+        Servicio servicio = servicioRepositorio.findById(nuevaCita.getServicioId())
+                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado con ID: " + nuevaCita.getServicioId()));
 
+        Profesional profesional = profesionalRepositorio.findById(nuevaCita.getProfesionalId())
+                .orElseThrow(() -> new IllegalArgumentException("Profesional no encontrado con ID: " + nuevaCita.getProfesionalId()));
+
+        // Validar fecha
         if (nuevaCita.getFechaHoraInicio() == null) {
             throw new IllegalArgumentException("La fecha y hora de inicio de la cita es obligatoria.");
         }
 
-        // Si la duración no se especifica o es inválida, usa la del servicio
+        // Si la duración no se especifica, usar la del servicio
         if (nuevaCita.getDuracionServicioHoras() == null || nuevaCita.getDuracionServicioHoras() <= 0) {
             nuevaCita.setDuracionServicioHoras(servicio.getDuracionHoras());
         }
-        nuevaCita.setFechaHoraFin(nuevaCita.getFechaHoraInicio().plusMinutes(nuevaCita.getDuracionServicioHoras()));
 
+        // Calcular fecha de fin
+        nuevaCita.setFechaHoraFin(
+                nuevaCita.getFechaHoraInicio().plusMinutes(nuevaCita.getDuracionServicioHoras())
+        );
+
+        // Verificar conflictos de agenda
         List<Citas> citasConflictivas = citasRepositorio.findConflictingAppointments(
-                profesional, nuevaCita.getFechaHoraInicio(), nuevaCita.getFechaHoraFin());
+                profesional.getIdProfesional(),
+                nuevaCita.getFechaHoraInicio(),
+                nuevaCita.getFechaHoraFin()
+        );
 
         if (!citasConflictivas.isEmpty()) {
             throw new IllegalArgumentException("Ya existe una cita agendada para el profesional '" +
@@ -57,6 +65,8 @@ public class CitasServicio {
                     nuevaCita.getFechaHoraInicio().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")) + " - " +
                     nuevaCita.getFechaHoraFin().format(DateTimeFormatter.ofPattern("HH:mm")) + ").");
         }
+
+        // Estado por defecto
         if (nuevaCita.getEstadoCita() == null) {
             nuevaCita.setEstadoCita(Citas.EstadoCita.PENDIENTE);
         }
@@ -68,107 +78,96 @@ public class CitasServicio {
         return citasRepositorio.findAll();
     }
 
-    public Optional<Citas> buscarCitaPorId(Long id) {
+    public Optional<Citas> buscarCitaPorId(String id) {
         return citasRepositorio.findById(id);
     }
 
-    @Transactional
-    public Citas actualizarCita(Long id, Citas citaActualizada) throws Exception {
+    /**
+     * Actualizar cita
+     */
+    public Citas actualizarCita(String id, Citas citaActualizada) {
         Citas citaExistente = citasRepositorio.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cita no encontrada con ID: " + id));
 
-        // Actualizar campos directos
+        // Actualizar fecha inicio
         if (citaActualizada.getFechaHoraInicio() != null) {
             citaExistente.setFechaHoraInicio(citaActualizada.getFechaHoraInicio());
         }
 
-        // Actualizar el Cliente si el ID ha cambiado
-        if (citaActualizada.getCliente() != null && citaActualizada.getCliente().getId() != null &&
-                (citaExistente.getCliente() == null || !citaExistente.getCliente().getId().equals(citaActualizada.getCliente().getId()))) {
-            Cliente nuevoCliente = pacienteRepositorio.findById(citaActualizada.getCliente().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Nuevo Paciente no encontrado con ID: " + citaActualizada.getCliente().getId()));
-            citaExistente.setCliente(nuevoCliente);
+        // Actualizar cliente
+        if (citaActualizada.getClienteId() != null &&
+                (citaExistente.getClienteId() == null || !citaExistente.getClienteId().equals(citaActualizada.getClienteId()))) {
+            clienteRepositorio.findById(citaActualizada.getClienteId())
+                    .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + citaActualizada.getClienteId()));
+            citaExistente.setClienteId(citaActualizada.getClienteId());
         }
 
-        // Actualizar el Servicio y recalcular la duración si es necesario
-        Servicio servicioActualSeleccionado = citaExistente.getServicio(); // Por defecto, el servicio actual
-        if (citaActualizada.getServicio() != null && citaActualizada.getServicio().getIdServicio() != null) {
-            // Si el servicio en la cita actualizada es diferente al existente
-            if (citaExistente.getServicio() == null || !citaExistente.getServicio().getIdServicio().equals(citaActualizada.getServicio().getIdServicio())) {
-                Servicio nuevoServicio = servicioRepositorio.findById(citaActualizada.getServicio().getIdServicio())
-                        .orElseThrow(() -> new IllegalArgumentException("Nuevo Servicio no encontrado con ID: " + citaActualizada.getServicio().getIdServicio()));
-                citaExistente.setServicio(nuevoServicio);
-                servicioActualSeleccionado = nuevoServicio; // Ahora el servicio para la duración es el nuevo
-            }
+        // Actualizar servicio y recalcular duración
+        String servicioIdActual = citaExistente.getServicioId();
+        if (citaActualizada.getServicioId() != null &&
+                (servicioIdActual == null || !servicioIdActual.equals(citaActualizada.getServicioId()))) {
+            Servicio nuevoServicio = servicioRepositorio.findById(citaActualizada.getServicioId())
+                    .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado con ID: " + citaActualizada.getServicioId()));
+            citaExistente.setServicioId(nuevoServicio.getIdServicio());
+            citaExistente.setDuracionServicioHoras(nuevoServicio.getDuracionHoras());
         }
 
-        // Determinar la duración final para citaExistente
+        // Actualizar duración manual si se envía
         if (citaActualizada.getDuracionServicioHoras() != null && citaActualizada.getDuracionServicioHoras() > 0) {
-            // Si el usuario envió una duración válida, la usamos
             citaExistente.setDuracionServicioHoras(citaActualizada.getDuracionServicioHoras());
-        } else if (servicioActualSeleccionado != null && servicioActualSeleccionado.getDuracionHoras() != null && servicioActualSeleccionado.getDuracionHoras() > 0) {
-            // Si no se envió duración o es inválida, pero tenemos un servicio (nuevo o existente) con duración, la usamos
-            citaExistente.setDuracionServicioHoras(servicioActualSeleccionado.getDuracionHoras());
-        } else {
-            // Si no hay duración válida ni servicio con duración, puedes manejarlo aquí (ej. lanzar error, usar un valor por defecto)
-            // Por ahora, si no se puede determinar, se mantendrá el valor que ya tenía citaExistente o null.
-            // Para ser más seguro, podrías lanzar: throw new IllegalArgumentException("No se pudo determinar la duración del servicio.");
         }
 
-
-        // Recalcular la fecha de fin con la duración final (ahora que la duración está establecida)
+        // Recalcular fecha de fin
         if (citaExistente.getFechaHoraInicio() != null && citaExistente.getDuracionServicioHoras() != null) {
-            citaExistente.setFechaHoraFin(citaExistente.getFechaHoraInicio().plusMinutes(citaExistente.getDuracionServicioHoras()));
+            citaExistente.setFechaHoraFin(
+                    citaExistente.getFechaHoraInicio().plusMinutes(citaExistente.getDuracionServicioHoras())
+            );
         }
 
-
-        // Actualizar el Profesional si el ID ha cambiado
-        if (citaActualizada.getProfesional() != null && citaActualizada.getProfesional().getIdProfesional() != null &&
-                (citaExistente.getProfesional() == null || !citaExistente.getProfesional().getIdProfesional().equals(citaActualizada.getProfesional().getIdProfesional()))) {
-            Profesional nuevoProfesional = profesionalRepositorio.findById(citaActualizada.getProfesional().getIdProfesional())
-                    .orElseThrow(() -> new IllegalArgumentException("Nuevo Profesional no encontrado con ID: " + citaActualizada.getProfesional().getIdProfesional()));
-            citaExistente.setProfesional(nuevoProfesional);
+        // Actualizar profesional
+        if (citaActualizada.getProfesionalId() != null &&
+                (citaExistente.getProfesionalId() == null || !citaExistente.getProfesionalId().equals(citaActualizada.getProfesionalId()))) {
+            profesionalRepositorio.findById(citaActualizada.getProfesionalId())
+                    .orElseThrow(() -> new IllegalArgumentException("Profesional no encontrado con ID: " + citaActualizada.getProfesionalId()));
+            citaExistente.setProfesionalId(citaActualizada.getProfesionalId());
         }
 
-        // Actualizar el Estado de la Cita
+        // Actualizar estado
         if (citaActualizada.getEstadoCita() != null) {
             citaExistente.setEstadoCita(citaActualizada.getEstadoCita());
         }
 
-
-        // Lógica de validación de superposición para actualización
+        // Validar conflictos (excluyendo la propia cita)
         List<Citas> citasConflictivas = citasRepositorio.findConflictingAppointmentsExcludingSelf(
-                citaExistente.getProfesional(), citaExistente.getFechaHoraInicio(), citaExistente.getFechaHoraFin(), citaExistente.getIdCita());
+                citaExistente.getProfesionalId(),
+                citaExistente.getFechaHoraInicio(),
+                citaExistente.getFechaHoraFin(),
+                citaExistente.getIdCita()
+        );
 
         if (!citasConflictivas.isEmpty()) {
-            throw new IllegalArgumentException("Ya existe una cita agendada para el profesional '" +
-                    citaExistente.getProfesional().getNombreCompleto() + "' en el horario seleccionado (" +
-                    citaExistente.getFechaHoraInicio().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")) + " - " +
-                    citaExistente.getFechaHoraFin().format(DateTimeFormatter.ofPattern("HH:mm")) + ").");
+            throw new IllegalArgumentException("Ya existe una cita agendada para el profesional en ese horario.");
         }
 
-        // Finalmente, guardar la cita con todos los cambios
         return citasRepositorio.save(citaExistente);
     }
 
-    public void eliminarCita(Long id) {
+    public void eliminarCita(String id) {
         if (!citasRepositorio.existsById(id)) {
             throw new IllegalArgumentException("Cita no encontrada con ID: " + id);
         }
         citasRepositorio.deleteById(id);
     }
 
-    @Transactional
-    public List<Citas> obtenerCitasPorNegocio(Long negocioId) {
-        Negocio negocio = negocioRepositorio.findById(negocioId)
+    public List<Citas> obtenerCitasPorNegocio(String negocioId) {
+        negocioRepositorio.findById(negocioId)
                 .orElseThrow(() -> new IllegalArgumentException("Negocio no encontrado con ID: " + negocioId));
-        return citasRepositorio.findByProfesional_NegocioOrderByFechaHoraInicioAsc(negocio);
+        return citasRepositorio.findByNegocioIdOrderByFechaHoraInicioAsc(negocioId);
     }
 
-    @Transactional
-    public List<Citas> obtenerCitasPorProfesional(Long profesionalId) {
-        Profesional profesional = profesionalRepositorio.findById(profesionalId)
+    public List<Citas> obtenerCitasPorProfesional(String profesionalId) {
+        profesionalRepositorio.findById(profesionalId)
                 .orElseThrow(() -> new IllegalArgumentException("Profesional no encontrado con ID: " + profesionalId));
-        return citasRepositorio.findByProfesionalOrderByFechaHoraInicioAsc(profesional);
+        return citasRepositorio.findByProfesionalIdOrderByFechaHoraInicioAsc(profesionalId);
     }
 }

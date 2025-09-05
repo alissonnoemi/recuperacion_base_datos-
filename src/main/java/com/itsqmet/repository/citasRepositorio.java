@@ -4,8 +4,8 @@ import com.itsqmet.entity.Citas;
 import com.itsqmet.entity.Cliente;
 import com.itsqmet.entity.Negocio;
 import com.itsqmet.entity.Profesional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface citasRepositorio extends JpaRepository <Citas, Long> {
+public interface citasRepositorio extends MongoRepository<Citas, Long> {
     List<Citas> findByCliente(Cliente cliente);
     List<Citas> findByProfesionalOrderByFechaHoraInicioAsc(Profesional profesional);
 
